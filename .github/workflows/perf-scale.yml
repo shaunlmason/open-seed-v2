@@ -28,16 +28,14 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/go-env
-      - name: 'The gate at the scale profile (next/perf/budgets-scale.json)'
+      - name: 'The gate at the scale profile (perf/budgets-scale.json)'
         run: go run ./cmd/perfgate -budgets perf/budgets-scale.json -last perf/last-scale.json -keep "$RUNNER_TEMP/perf-scale-work"
-        working-directory: next
       # The admission random walk at the scheduled size
       # (plans/os-21bf939f.md D6): the same walker make check-next runs at
       # 8 walks of 24 steps, at 200 walks of 96. A red run is the signal;
       # the log carries the seed and the step script that reproduce it.
       - name: 'The admission random walk at the scheduled size'
         run: go test ./internal/admit -run TestAdmissionRandomWalk -count=1 -args -walks=200 -steps=96
-        working-directory: next
       # The append-loop interleaving check at the scheduled size
       # (plans/os-07e6e76c.md D5): the fast gate's four configurations
       # plus four writers with four attempts, and every terminal trace of
@@ -45,7 +43,6 @@ jobs:
       # names the trace.
       - name: 'The append-loop interleaving check at the scheduled size'
         run: go test ./internal/gitref -run 'TestAppendInterleavings|TestAppendInterleavingReplay' -count=1 -args -writers=4 -attempts=4 -replay=0
-        working-directory: next
       # The reconciliation and racing interleaving checks at the
       # scheduled size (plans/os-873b5153.md D7): the fast gate runs them
       # at depth 4 (852 terminal states, ~1.9s) and race-depth 7 (2,007
@@ -56,13 +53,12 @@ jobs:
         run: |
           go test ./internal/reconcile -run TestReconciliationInterleavings -count=1 -args -depth=6
           go test ./internal/maintain -run TestRacingInterleavings -count=1 -args -race-depth=9
-        working-directory: next
       - name: 'Attach the reading, pass or fail'
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: perf-scale-reading
-          path: next/perf/last-scale.json
+          path: perf/last-scale.json
           if-no-files-found: warn
       # A storm that loses a writer writes no reading at all, so the
       # refused trees are the only evidence it leaves: the client keeps

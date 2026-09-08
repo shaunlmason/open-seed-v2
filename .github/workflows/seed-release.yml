@@ -1,6 +1,6 @@
 # seed-release (dispatch-only; plans/os-2e46aa2f.md; docs/next-build-plan.md
 # section 5, the distribution step). Cuts a release of Seed, the successor
-# under next/. The binaries are built from next/ for six targets with the
+# under . The binaries are built from  for six targets with the
 # version stamped and their archives and sha256 sums written first; only
 # then is the tag minted at HEAD in-runner, so the tag and the released
 # commit can never disagree, no contributor needs tag-push rights (the
@@ -12,11 +12,11 @@
 # version on the same commit resumes the cut; a tag that points elsewhere,
 # or a release already published, refuses: a release is cut once. No
 # schedule and no push trigger: a release is the operator's act at the
-# distribution step, and the CI-identity lint (next/internal/protections)
+# distribution step, and the CI-identity lint (internal/protections)
 # holds scheduled workflows to read-only. The job runs in the
 # seed-release environment and only from the default branch: the
 # environment's deployment branch policy, an operator precondition
-# (next/docs/handbook.md section 1), is what keeps a branch's edited copy
+# (docs/handbook.md section 1), is what keeps a branch's edited copy
 # of this file away from these privileges, and the ref guard restates it
 # in the file as defense in depth. Seed's tags live under seed/v*, apart
 # from the template's v* releases and the seed-anchor/* state anchors,
@@ -88,7 +88,6 @@ jobs:
       - uses: ./.github/actions/go-env
 
       - name: Build seed and seed-admit for six targets, the version stamped
-        working-directory: next
         run: |
           set -eu
           mkdir -p ../dist
@@ -129,13 +128,13 @@ jobs:
       - name: Create the release as a draft (a draft left by an incomplete run is replaced)
         run: |
           set -eu
-          protocol=$(grep -o 'seed/[0-9]*' next/internal/version/version.go | sort -t/ -k2 -n | tail -1)
+          protocol=$(grep -o 'seed/[0-9]*' internal/version/version.go | sort -t/ -k2 -n | tail -1)
           if [ "$RELEASE_STATE" = draft ]; then
             gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes
           fi
           gh release create "$TAG" dist/seed_*.tar.gz dist/seed_*.zip dist/checksums.txt \
             --repo "$GITHUB_REPOSITORY" --draft --title "Seed $VERSION" \
-            --notes "Seed $VERSION at $GITHUB_SHA, protocol register up to $protocol. Binaries: seed and seed-admit for linux, darwin and windows on amd64 and arm64, built with -trimpath from next/. Verify an archive against checksums.txt and its provenance with: gh attestation verify <archive> --repo $GITHUB_REPOSITORY"
+            --notes "Seed $VERSION at $GITHUB_SHA, protocol register up to $protocol. Binaries: seed and seed-admit for linux, darwin and windows on amd64 and arm64, built with -trimpath from . Verify an archive against checksums.txt and its provenance with: gh attestation verify <archive> --repo $GITHUB_REPOSITORY"
 
       - name: Attest build provenance, before the release is public
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0

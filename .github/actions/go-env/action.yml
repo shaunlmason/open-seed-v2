@@ -1,0 +1,64 @@
+# Go toolchain and caches for the suite. Every job that runs
+# `make check` (directly, through a plan's validation commands, or inside
+# a flavor-test instantiation) compiles the same module graph; without a
+# cache each of them rebuilt it from source, modernc.org/sqlite included.
+#
+# Restore is free on every job; save is not (the archive is close to a
+# gigabyte and the upload runs in the job's tail), so only the check job on
+# a push to main saves. Pull-request jobs restore the newest main cache by
+# key prefix and never upload.
+#
+# The same step also moves the temp directory onto tmpfs when the runner
+# has one: the suite's drills fsync ledgers and spawn git in temp dirs, and
+# on the runner's disk that is a quarter of the suite's wall clock (129s
+# against 100s for cmd/seed alone, measured on a 4-core host).
+name: go-env
+description: Go toolchain from go.mod, the Go caches saved from main, and a tmpfs scratch directory.
+inputs:
+  save:
+    description: "Save the caches when the job ends. True only on a push to main."
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Scratch directory on tmpfs
+      shell: bash
+      run: |
+        dir=/dev/shm/seed-tmp
+        if [ "$(stat -f -c %T /dev/shm 2>/dev/null)" = tmpfs ] \
+           && [ "$(df -k --output=avail /dev/shm | tail -1)" -gt 4000000 ]; then
+          mkdir -p "$dir"
+          echo "TMPDIR=$dir" >> "$GITHUB_ENV"
+          echo "TMPDIR=$dir"
+        else
+          echo "no tmpfs of at least 4 GB at /dev/shm; keeping the runner's temp"
+        fi
+    # The floor go.mod names, satisfied from the runner's toolcache
+    # (what an unpinned runner resolved to before this action existed), so
+    # no job pays a toolchain download.
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.25.0'
+        check-latest: false
+        cache: false
+    - if: inputs.save != 'true'
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: go-${{ runner.os }}-${{ hashFiles('go.sum') }}-${{ github.sha }}
+        restore-keys: |
+          go-${{ runner.os }}-${{ hashFiles('go.sum') }}-
+          go-${{ runner.os }}-
+    - if: inputs.save == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: go-${{ runner.os }}-${{ hashFiles('go.sum') }}-${{ github.sha }}
+        restore-keys: |
+          go-${{ runner.os }}-${{ hashFiles('go.sum') }}-
+          go-${{ runner.os }}-
