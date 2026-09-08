@@ -16,7 +16,7 @@ machinery reads, never from prose.
 
 ## 1. Install
 
-The engine is pinned by the repository; you run it through `scripts/seed`,
+You build the binary from this repository (`go build -o bin/seed ./cmd/seed`) and run it as `bin/seed`,
 which bootstraps the exact version the ledger was built with. No account,
 one command:
 

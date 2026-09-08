@@ -1,5 +1,15 @@
 # The promotion evidence packet
 
+> **Incubation record, superseded.** This packet was written for a gate that is now moot. It describes the
+> self-hosting cutover inside the predecessor repository, in which Seed
+> would have taken over open-seed's own coordination. That cutover did not
+> happen: Seed was extracted into this repository instead, which needs no
+> governance root key because no authority moves inside the predecessor at
+> all. See [`../decisions/0009-v2-extraction-supersedes-the-cutover.md`](../decisions/0009-v2-extraction-supersedes-the-cutover.md).
+> Kept because the evidence in it is real and still bears on anyone
+> importing v1 state, and because a route not taken is worth being able to
+> read.
+
 This is the document the operator reads at the promotion gate
 (`docs/build-plan.md` §5; plans/os-98ce6f8a.md). The build plan
 defines promotion as two human cutovers, self-hosting and then

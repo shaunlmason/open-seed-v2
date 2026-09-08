@@ -1,8 +1,8 @@
 {
-  "admission_ms": 0.11,
-  "attempts_ratio": 12,
-  "contention_ms": 29327.405,
-  "rebuild_ms": 245.724,
+  "admission_ms": 0.12,
+  "attempts_ratio": 11.875,
+  "contention_ms": 24584.421,
+  "rebuild_ms": 234.181,
   "relinked": 0,
-  "replay_ms": 52.901
+  "replay_ms": 49.379
 }
