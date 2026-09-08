@@ -1,0 +1,41 @@
+{
+  "schema": "seed-import/0",
+  "source": "open-seed",
+  "identities": {
+    "shaunlmason": {"kind": "human", "name": "shaunlmason"},
+    "seed-next-implementer": {"kind": "agent", "name": "seed-next-implementer"},
+    "seed-maintenance": {"kind": "service", "name": "seed-maintenance"},
+    "claude-session": {"kind": "agent", "name": "claude-session"},
+    "claude": {"kind": "agent", "name": "claude"},
+    "shim": {"kind": "service", "name": "shim"},
+    "": {"kind": "service", "name": "unattributed"}
+  },
+  "states": {
+    "backlog": "backlog", "ready": "ready", "in_progress": "in_progress", "review": "review",
+    "blocked": "blocked", "done": "done", "cancelled": "cancelled"
+  },
+  "verbs": {
+    "create": {"event": "intent.filed"},
+    "promote": {"event": "contract.specified"},
+    "claim": {"event": "claim.taken"},
+    "transition": {"event": "by target state: in_progress→blocked is claim.parked with a packet from the handoff; ready→blocked is contract.blocked; blocked→ready is contract.unblocked; in_progress→review is submission.made with a packet; in_progress→ready is claim.released with a packet"},
+    "release": {"event": "claim.released"},
+    "plan-unblock": {"event": "contract.unblocked"},
+    "close": {"event": "by resolution: done is the chain verdict.rendered(pass) → merge.requested → merge.observed, cancelled is contract.cancelled"},
+    "accept": {"event": "the chain: verdict.rendered(pass) → merge.requested → merge.observed"},
+    "cancel": {"event": "contract.cancelled"},
+    "comment": {"event": "message.sent"},
+    "mail-send": {"event": "message.sent addressed to the recipient, the body an artifact (inline when short), as comment is for a card"},
+    "mail-ack": {"drop": "Seed keeps no read-state: the position a lane carries forward IS its read cursor, so message.acked stays unimplemented by design (spec/obligations.md, Unread is the cursor, and there is no read-state)"},
+    "attach-evidence": {"event": "artifact: the evidence block, and the receipt file where the kind is receipt"},
+    "record-evidence": {"event": "artifact: the recorded reference"},
+    "lease-renew": {"drop": "Seed holds no lease (spec/observations.md)"},
+    "exempt-plan": {"drop": "the operator's plan_exempt reason on the card, which stops v1's D3/D7 done lint asking for plans/<id>.md; every imported contract lands at this table's default trivial tier, where Seed's plan gate does not bind (spec/plans.md, The gate bites at submission.made), so the exemption has nothing left to carry"},
+    "unblock": {"event": "contract.unblocked where v1 recorded a transition (blocked→ready); an entry v1 marked transitioned:false changed nothing and becomes nothing, noted"},
+    "blocker_resolved": {"drop": "dependency bookkeeping the v1 shim kept beside the card: it records that a blocker was removed, and the unblock entry that follows records the transition; the plan's decision.recorded answers a standing escalation, which no v1 card raised, so it is inadmissible here (docs/decisions.md, Phase 12 item 5)"},
+    "halt": {"drop": "a v1 halt marker is a run-log note the maintenance workflow wrote; nothing imported was halted, and Seed's halt is system.halt.declared by an operator"},
+    "state-resume": {"drop": "the operator clearing v1's halt marker; see halt"},
+    "state-repair": {"drop": "an operator's repair of the v1 state ref; the card's frontmatter is the repaired truth and is what the transform reads"}
+  },
+  "defaults": {"tier": "trivial", "budget": "small", "routing": "core"}
+}

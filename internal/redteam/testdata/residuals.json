@@ -1,0 +1,46 @@
+{
+  "residuals": [
+    {
+      "name": "signed-lie",
+      "why": "attribution is not trust: the ledger records what a key signed, and a false dead end is evidence attributed to the compromised key, which the charter accepts as the ceiling of what it can do (SEED-NEXT.md \u00a7II.5, the compromised-actor consequence)",
+      "inflicts": "a false observation in the curation stores under the compromised actor's name",
+      "stands_in_the_way": "conclusion-writing is grant-gated to the curator's proposal path (curation.md); a hypothesis needs support from two distinct non-failed contracts and the promotion gate re-judges every citation at the boundary's own position; revocation ends the key's standing and the reconciler surfaces what it signed"
+    },
+    {
+      "name": "self-exhaustion",
+      "why": "a reservation inside the class's remaining capacity is exactly what the permission grants, and nothing distinguishes a reservation the actor means to spend from one it means to strand",
+      "inflicts": "the class's remaining capacity on its own contract consumed by its own reservation, so a later reserve on that contract refuses exhausted (exit 27) \u2014 denial of its own progress, and the class's until the reservation settles or the window closes",
+      "stands_in_the_way": "the reservation is attributable and position-stamped; the operator lane closes a reservation whoever reserved it (budgets.md); the capacity is the contract's class, not the organization's"
+    },
+    {
+      "name": "refusal-flooding",
+      "why": "every refused push costs the hook a replay from genesis, and a valid credential can push as often as the transport allows",
+      "inflicts": "denial of progress at the remote \u2014 latency for honest pushers while refusals are processed \u2014 never denial of authority: the ref does not move, and the next valid push lands",
+      "stands_in_the_way": "the ref stays where it was after every refusal, the hook stays responsive, and revocation ends the credential's transport access in the reference deployment (the ssh forced command)"
+    },
+    {
+      "name": "test-content",
+      "why": "the charter names it (SEED-NEXT.md \u00a7II.14): ordinary test content outside the protected surface remains in an implementer's write scope",
+      "inflicts": "a commit on its own contract branch that weakens or removes a test the verifier will run",
+      "stands_in_the_way": "diff-vs-plan review, the receipt's changed-file inventory, and sealed checks the implementer cannot read (sealed-checks.md); the protected surface itself is write-denied"
+    },
+    {
+      "name": "credential-binding",
+      "why": "the pusher's identity is the transport's assertion (SEED_PUSHER): in the reference deployment the ssh forced command derives it from the authenticated key, and in the filesystem fixture the harness sets it \u2014 forging it is stealing another actor's credential, which \u00a7I.2 places outside the adversary",
+      "inflicts": "with a stolen credential, that actor's contract branch; nothing on the ledger, whose half is signature-bound and refuses an event the stolen credential's key did not sign",
+      "stands_in_the_way": "the transport's authentication, outside Seed; the ledger half's signatures inside it"
+    },
+    {
+      "name": "one-posture",
+      "why": "the drill proves the enforced-self-hosted posture, the charter's reference deployment; cooperative mode has no server-side enforcement by declaration (posture.Consequence) and enforced-forge-hosted is Phase 12 item 2's admission service",
+      "inflicts": "nothing here: the harness refuses to build a cooperative fixture, so the drill cannot report green for a posture where the invariant does not hold",
+      "stands_in_the_way": "the harness's own refusal, pinned; the doctor stating the cooperative consequence in plain words"
+    },
+    {
+      "name": "revocation-reap",
+      "why": "revoking the compromised key ends its standing \u2014 every later proposal refuses at the push and its contract branch closes \u2014 but its open claim stands on the ledger until reaped, and today's reap needs an interrupt answered by silence (maintenance.md), which a revoked holder never produces",
+      "inflicts": "the contract it held stays in_progress under a key that can no longer act on it until an operator or the maintenance lane reaps it",
+      "stands_in_the_way": "the reap now lands: os-32d06c65 added admit.RevokedHolder as the third reap corroboration and the maintenance pass reaps a revoked holder's open claim with a force packet (so the work is re-offered) and surfaces it as a claim.reap-owed obligation. What this drill still asserts is the revocation's other two consequences, which stand: a revoked key's ledger proposals refuse at the push, and its contract branch closes with its standing"
+    }
+  ]
+}

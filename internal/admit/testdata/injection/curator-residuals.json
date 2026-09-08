@@ -1,0 +1,45 @@
+{
+  "_comment": "Acts a curate-only key can perform, each with why it is admitted and what a persuaded lane can inflict with it (plans/os-f30ee0d3.md AC5). The reachability drill derives the set from admit.Affordances over the pinned catalog and fails on any verb not listed here, in either direction.",
+  "residuals": [
+    {
+      "verb": "curation.hypothesis.proposed",
+      "why_admitted": "proposing hypotheses is the curator's job, and the proposal is the one write its grant reaches",
+      "consequence": "bounded by the support floor: a proposal cites at least two admitted observations on two distinct non-failed contracts, re-judged from the record, so a persuaded curator can propose only what the trajectories already carry, and a proposal concludes nothing until a lesson PR the governance root reviews lands (spec/curation.md)"
+    },
+    {
+      "verb": "curation.hypothesis.contested",
+      "why_admitted": "contesting is the curator's attributable judgment over held-out evidence, the proposal's own no-fallback row",
+      "consequence": "bounded by the held-out rule: a contest cites admitted observations on contracts the applies-when selects and outside the support set, re-judged from the record, so a persuaded curator can close a hypothesis only with evidence the trajectories already carry, and the road out is a new proposal on its own support (spec/curation.md)"
+    },
+    {
+      "verb": "curation.deadend.retired",
+      "why_admitted": "retiring a dead end on an environment change is the curator's attributable judgment that the environment moved (plans/os-0d537fbd.md D3), the curate row alone",
+      "consequence": "bounded by the citation and the environment: the act cites an admitted dead end on its own contract and names an environment other than the recorded one, re-judged from the record, so a persuaded curator can only flag evidence that stays in the fold, never delete it; the applicability read and the held-out listing skip a retired dead end, and any curate key un-retires it (spec/curation.md)"
+    },
+    {
+      "verb": "curation.deadend.unretired",
+      "why_admitted": "un-retiring is the same judgment in the other direction: the environment moved again, so the dead end applies again",
+      "consequence": "bounded by the standing retirement and its environment: admits only over an admitted retirement and in an environment other than the one it named, so a persuaded curator can restore a dead end to the listing and nothing more; the dead end's own evidence never changed (spec/curation.md)"
+    },
+    {
+      "verb": "workflow.proposed",
+      "why_admitted": "proposing a validated workflow for a recurring shape is the curator's flywheel act, on the same propose-everything, approve-nothing posture as the lesson proposal (plans/os-9075c308.md D4)",
+      "consequence": "bounded by the record and the gates: the proposal cites at least two admitted done occurrences folding to its shape, recomputed from the record, names a file directly under the registry, stands alone for its shape, and cites a passed repair where one exists; the file reaches main only through a PR the governance root reviews and the merge observation is the observer's, so a persuaded curator can propose a workflow the trajectories already ran, drafted from gated acceptance commands, and nothing more (spec/flywheel.md)"
+    },
+    {
+      "verb": "escalation.raised",
+      "why_admitted": "any lane may raise blocked(needs-you) per the charter; the curator joined the row with its proposal grant",
+      "consequence": "freezes a contract until a human answers: denial of progress, never escalation of authority, attributable and reversible (spec/escalation.md)"
+    },
+    {
+      "verb": "message.sent",
+      "why_admitted": "standing-only: any enrolled active actor appends it",
+      "consequence": "RELAYS text, bounded by the classification lint at 512 bytes per string; the same residual the dispatcher's table names"
+    },
+    {
+      "verb": "approval.requested",
+      "why_admitted": "standing-only: the per-verb approval request grants nothing, so any enrolled active actor files one (plans/os-5781a026.md D2)",
+      "consequence": "puts a request in the operator's inbox (approval.pending, owed by lane:operator) naming a catalog verb, an enrolled actor and a one-line reason; admits nothing until the operator's grant, which is spent by one act by the actor named, so a persuaded curator can only ask, attributably; the same residual the dispatcher's table names"
+    }
+  ]
+}

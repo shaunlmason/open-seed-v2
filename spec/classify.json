@@ -1,0 +1,9 @@
+{
+  "schema_version": "1",
+  "max_payload_bytes": 4096,
+  "max_string_bytes": 512,
+  "aggregate_text_budget_bytes": 1024,
+  "max_depth": 8,
+  "max_array_len": 64,
+  "max_base64_run": 256
+}

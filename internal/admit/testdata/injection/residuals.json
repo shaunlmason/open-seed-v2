@@ -1,0 +1,71 @@
+{
+  "_comment": "Acts a dispatch-only key can perform, each with why it is admitted and what a persuaded lane can inflict with it. The reachability drill (plans/os-b779b4c7.md D1) derives the reachable set from admit.Affordances - the boundary itself, over a catalog whose completeness is pinned against the spec table - and fails on any verb not listed here. A verb added later, of any capability class including one needing no capability at all, therefore lands here as a red test rather than as a silent widening.",
+  "residuals": [
+    {
+      "verb": "intent.filed",
+      "why_admitted": "queue management is the dispatcher's job",
+      "consequence": "SHARP: the filed tier is presence-only data, and the single value \"trivial\" exempts BOTH the plan gate (Fold.CheckPlanGate) and the sealed-checks lint (internal/reconcile). Every other value fails safe, since both sites test against the constant, so the residual is exactly one string wide. Owner: Phase 10's tier system."
+    },
+    {
+      "verb": "contract.specified",
+      "why_admitted": "routing a contract with a draft acceptance spec is the dispatcher's job; from seed/4, so is revising that draft while the contract is still unclaimed (re-specification, the ready origin; plans/os-6bd9ffff.md D4)",
+      "consequence": "bounded by the acceptance gate: executable content requires review-gate evidence at every tier, so text cannot become an executed command without a gate between (internal/transition/acceptance.go). RE-SPECIFICATION widens the reach, not the bound: a persuaded dispatcher can rewrite an unclaimed contract's draft acceptance at seed/4, and the same gate binds the rewrite; a claimed, reviewed, blocked or finished contract is out of reach by the table, and tier, budget and routing stay the intent's. The record now carries the revision (Specifications on the fold; the report's re-triage rate), so a rewrite is visible as one rather than as the first draft. Owner: tier provenance, for the fields this cannot revise."
+    },
+    {
+      "verb": "contract.blocked",
+      "why_admitted": "queue management",
+      "consequence": "stalls a contract; visible, attributable, and reversible by contract.unblocked"
+    },
+    {
+      "verb": "contract.unblocked",
+      "why_admitted": "queue management",
+      "consequence": "releases a block; visible and attributable"
+    },
+    {
+      "verb": "contract.returned",
+      "why_admitted": "returning a fail-verdicted contract to the queue is queue management",
+      "consequence": "requires a red verdict to cite, so it cannot be used to return work nobody judged"
+    },
+    {
+      "verb": "claim.reaped",
+      "why_admitted": "queue management",
+      "consequence": "SHARP, and narrower than it first looks. Two preconditions exist, neither an authorization check: the reap must cite the ACTIVE FENCE, which makes it current rather than aimed at a window already closed (the fence is readable from any position-stamped read, so this is freshness, not authorization); and it must carry a four-part PACKET, because a reap is a deliberate exit, which makes it attributable and hands the next claimant a resume point without asking whether the reap was warranted. A persuaded dispatcher satisfies both by reading and writing. No expiry, no wedge classification and no observation-stream evidence is consulted at all, by design: the reap is a judgment, not an inference. Owner: Phase 9 item 3's maintenance lane, where reap corroboration lives."
+    },
+    {
+      "verb": "message.sent",
+      "why_admitted": "NO CAPABILITY AT ALL - it is in the standing-only class, so any enrolled active actor appends it",
+      "consequence": "SHARP: this is the one that RELAYS. A dispatcher persuaded by hostile text can put text of its own on the ledger addressed to another lane. The classify lint bounds it at 512 bytes per string and the append is attributable and position-stamped, but neither makes it not a channel. Owner: unassigned; see spec/lanes.md."
+    },
+    {
+      "verb": "escalation.raised",
+      "why_admitted": "the charter says ANY lane can raise blocked(needs-you) (SEED-NEXT.md II.11), so the capability row is deliberately broad: claim, dispatch, verdict, supervise, operator",
+      "consequence": "a persuaded dispatcher can FREEZE a contract: while a question stands, contract.unblocked refuses and only the operator's decision.recorded or a citing contract.cancelled reopens it. That is denial of progress, not escalation of authority - raising GRANTS nothing (the offer.published argument), and the raiser cannot answer its own question, because decision.recorded is operator-only with no fallback. It is bounded further by being attributable: the raise carries the raiser's fingerprint and its question verbatim, so a persuaded raise is visible as one rather than as silence. Owner: Phase 9 item 3's maintenance lints, which is where a contract frozen without a plausible question should surface."
+    },
+    {
+      "verb": "approval.requested",
+      "why_admitted": "NO CAPABILITY AT ALL - the per-verb approval request is in the standing-only class, like request.filed, because asking grants nothing (plans/os-5781a026.md D2)",
+      "consequence": "a persuaded dispatcher can put a REQUEST in the operator's inbox: an approval.pending obligation owed by lane:operator, naming a catalog verb and an enrolled actor with a one-line reason bounded at 200 bytes. It admits nothing by itself: only the operator's approval.granted (operator-only, no fallback) opens the act, the grant is spent by one act and names the actor the request named, so the requester cannot widen anyone's reach, and the request is attributable and position-stamped. What it can inflict is inbox noise, one row per subject, visible as such. Owner: the maintenance lints, where a flood of requests with no plausible act should surface."
+    },
+    {
+      "verb": "dependency.linked",
+      "why_admitted": "queue shaping is the dispatcher's job: a dependency is the graph half of routing (plans/os-f0ae2cdf.md D2)",
+      "consequence": "HIDES WORK: a persuaded dispatcher can link a ready contract to an open one, and the dependent leaves the queue, the poll, the wake delta and the claim boundary until the required contract is terminal. Bounded by the graph rule (a known open source, a known target, no self edge, no cycle, so nothing waits on itself) and by visibility: the link is attributable and position-stamped, the contracts view names it under `unresolved`, and dependency.unlinked by dispatch or operator reverses it. It grants nothing and moves no lifecycle state. Owner: the maintenance lints, where a contract linked to work nobody plausibly needs should surface."
+    },
+    {
+      "verb": "dependency.unlinked",
+      "why_admitted": "the reverse of the link, the same queue shaping",
+      "consequence": "EXPOSES WORK EARLY: removing the last link makes a ready dependent claimable before the work it needed is done. Attributable, position-stamped, and only an existing link unlinks; the claim it exposes still settles at admission like any claim. Owner: the maintenance lints."
+    },
+    {
+      "verb": "hierarchy.parented",
+      "why_admitted": "placing a contract under an initiative is queue shaping (plans/os-f0ae2cdf.md D2, D5)",
+      "consequence": "INHERITS A HOLD and LENDS A MISSION: a persuaded dispatcher can parent a ready contract under a blocked initiative, which hides it (held_by) until the hold lifts, or under an aligned one, which silences its goal-ancestry warning. Bounded by the graph rule (a known open source, a known target, no cycle) and by visibility: the contracts view names the parent, the held_by set and the mission's carrier, the report's rollup counts the descendant, and a re-parent replaces rather than accumulates. Lifecycle state never moves. Owner: the maintenance lints."
+    },
+    {
+      "verb": "goal.aligned",
+      "why_admitted": "naming an initiative's mission is queue shaping (plans/os-f0ae2cdf.md D7)",
+      "consequence": "SILENCES A WARNING: a persuaded dispatcher can align an open contract to any commit-anchored path, and every descendant stops warning. The anchor must be a reference (a path at a commit, never prose), so the ledger carries no hostile text through it; the carrier is rendered beside every warning-free descendant, so the silence is falsifiable from the same view; a repeat replaces. Owner: the maintenance lints."
+    }
+  ],
+  "_vocabulary": "The vocabulary swept is admit.affordanceCatalog, whose completeness against the spec table is TestAffordanceCatalogCompleteness's job (both directions: a catalog verb needs a spec row and a spec verb needs a catalog entry). The honest limit: message.acked, request.* and curation.* are named in spec/protocol.md but are in neither, being unimplemented, so this suite cannot speak about them. Whichever card lands them inherits their classification."
+}

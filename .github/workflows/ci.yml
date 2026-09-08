@@ -1,0 +1,29 @@
+# The gate: build, vet, gofmt, tests, coverage, perf, and the checks the
+# tree holds against itself (the fixture declaration, the boundary card,
+# and the governed docs). One job, deterministic, no secrets.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: true
+      - name: make check
+        run: make check

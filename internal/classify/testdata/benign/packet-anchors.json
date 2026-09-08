@@ -1,0 +1,58 @@
+{
+ "fence": "12",
+ "packet": {
+  "acceptance": [
+   "the refs resolve"
+  ],
+  "decisions": [
+   {
+    "decision": "anchors are data",
+    "basis": "verified"
+   }
+  ],
+  "base": "aaaaaaaaaaaa..bbbbbbbbbbbb",
+  "refs": [
+   "internal/pkg0/file0.go @ aaaaaaaaaaa0",
+   "internal/pkg1/file1.go @ aaaaaaaaaaa1",
+   "internal/pkg2/file2.go @ aaaaaaaaaaa2",
+   "internal/pkg3/file3.go @ aaaaaaaaaaa3",
+   "internal/pkg4/file4.go @ aaaaaaaaaaa4",
+   "internal/pkg5/file5.go @ aaaaaaaaaaa5",
+   "internal/pkg6/file6.go @ aaaaaaaaaaa6",
+   "internal/pkg7/file7.go @ aaaaaaaaaaa7",
+   "internal/pkg8/file8.go @ aaaaaaaaaaa8",
+   "internal/pkg9/file9.go @ aaaaaaaaaaa9",
+   "internal/pkg10/file10.go @ aaaaaaaaaaaa",
+   "internal/pkg11/file11.go @ aaaaaaaaaaab",
+   "internal/pkg12/file12.go @ aaaaaaaaaaac",
+   "internal/pkg13/file13.go @ aaaaaaaaaaad",
+   "internal/pkg14/file14.go @ aaaaaaaaaaae",
+   "internal/pkg15/file15.go @ aaaaaaaaaaaf",
+   "internal/pkg16/file16.go @ aaaaaaaaaa10",
+   "internal/pkg17/file17.go @ aaaaaaaaaa11",
+   "internal/pkg18/file18.go @ aaaaaaaaaa12",
+   "internal/pkg19/file19.go @ aaaaaaaaaa13",
+   "internal/pkg20/file20.go @ aaaaaaaaaa14",
+   "internal/pkg21/file21.go @ aaaaaaaaaa15",
+   "internal/pkg22/file22.go @ aaaaaaaaaa16",
+   "internal/pkg23/file23.go @ aaaaaaaaaa17",
+   "internal/pkg24/file24.go @ aaaaaaaaaa18",
+   "internal/pkg25/file25.go @ aaaaaaaaaa19",
+   "internal/pkg26/file26.go @ aaaaaaaaaa1a",
+   "internal/pkg27/file27.go @ aaaaaaaaaa1b",
+   "internal/pkg28/file28.go @ aaaaaaaaaa1c",
+   "internal/pkg29/file29.go @ aaaaaaaaaa1d",
+   "internal/pkg30/file30.go @ aaaaaaaaaa1e",
+   "internal/pkg31/file31.go @ aaaaaaaaaa1f",
+   "internal/pkg32/file32.go @ aaaaaaaaaa20",
+   "internal/pkg33/file33.go @ aaaaaaaaaa21",
+   "internal/pkg34/file34.go @ aaaaaaaaaa22",
+   "internal/pkg35/file35.go @ aaaaaaaaaa23",
+   "internal/pkg36/file36.go @ aaaaaaaaaa24",
+   "internal/pkg37/file37.go @ aaaaaaaaaa25",
+   "internal/pkg38/file38.go @ aaaaaaaaaa26",
+   "internal/pkg39/file39.go @ aaaaaaaaaa27"
+  ],
+  "findings": []
+ }
+}

@@ -1,0 +1,26 @@
+{
+  "lane": "planner",
+  "kind": "lane",
+  "summary": "Turns a card into a falsifiable plan in its own PR; the first place capability is spent, because a wrong decomposition poisons everything downstream.",
+  "grants": [
+    "claim"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [
+    "claim take",
+    "claim release",
+    "claim park"
+  ],
+  "liveness_from": [
+    "claim take"
+  ],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/planner.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md",
+    "common/acts-through-verbs.md",
+    "common/liveness.md",
+    "common/deliberate-exit.md"
+  ]
+}

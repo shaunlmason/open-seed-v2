@@ -1,0 +1,17 @@
+{
+  "lane": "supervisor",
+  "kind": "role",
+  "summary": "Publishes eligibility-scoped offers that workers pull and claim; initiates, settles and preempts execution runs. Invites work and never takes it. From seed/3 it mints qualifications from eval passes, disqualifies configurations eval fails name, and publishes the offers waiting evals need (seed eval act).",
+  "grants": [
+    "supervise"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [],
+  "liveness_from": [],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/supervisor.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md"
+  ]
+}

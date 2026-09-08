@@ -1,0 +1,469 @@
+{
+  "_comment": "The poisoning corpus (plans/os-e2f1ad23.md D1, D2): one scripted trajectory per name, each ending in an attempt to promote a false lesson, each asserted to fail at both ends. gate names a registered curation gate (curation.Gates()); a poison the boundary refuses outside the registry names its reason instead. Every registered gate has at least one poison, derived and pinned by internal/admit/poisoning_test.go.",
+  "poisons": [
+    {"name": "deadend-bare-pointer",
+      "gate": "deadend.shape",
+      "attack": "the holder records a dead end whose pointer is a bare path, so the observation cites a file no reader can resolve at a commit",
+      "expect": {
+        "verb": "curation.deadend.recorded",
+        "gate": "deadend.shape"
+      }
+    },
+    {"name": "deadend-not-holder",
+      "gate": "deadend.holder",
+      "attack": "a second worker records a dead end inside the holder's window, planting an observation on a trajectory it never worked",
+      "expect": {
+        "verb": "curation.deadend.recorded",
+        "gate": "deadend.holder"
+      }
+    },
+    {"name": "proposal-smuggled-field",
+      "gate": "proposal.shape",
+      "attack": "the curator's proposal carries an extra key (a lesson path), hoping a reader treats the proposal as already promoted",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "proposal.shape"
+      }
+    },
+    {"name": "subject-forged",
+      "gate": "proposal.subject",
+      "attack": "the curator proposes on a subject not derived from the claim, so a second proposal of the same claim could stand beside it",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "proposal.subject"
+      }
+    },
+    {"name": "predicate-everything",
+      "gate": "applies_when.shape",
+      "attack": "an empty applies-when, so the lesson would surface on every claim in the deployment",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "applies_when.shape"
+      }
+    },
+    {"name": "predicate-unknown-field",
+      "gate": "applies_when.shape",
+      "attack": "an applies-when naming a field the record does not derive, so no claim could be shown to fall outside it",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "applies_when.shape"
+      }
+    },
+    {"name": "unchanged-reproposal",
+      "gate": "support.duplicate",
+      "attack": "a contested claim re-proposed with the same claim and the same exceptions, hoping the contest does not follow it",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.duplicate"
+      }
+    },
+    {"name": "forged-support",
+      "gate": "support.observation",
+      "attack": "support citing a position that is no observation, a raise carrying a finding, and a position beyond the tip",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.observation"
+      }
+    },
+    {"name": "grantless-window",
+      "gate": "support.observation",
+      "attack": "a grantless key raw-pushes a claim on a ready contract and a dead end inside the apparent window, then the curator cites it",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.observation"
+      }
+    },
+    {"name": "failed-support",
+      "gate": "support.failed",
+      "attack": "support citing a contract whose authentic verdict is a fail, after the implementer raw-pushed a pass over it",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.failed"
+      }
+    },
+    {"name": "single-success",
+      "gate": "support.floor",
+      "attack": "one contract, two dead ends: a single run dressed as two observations",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.floor"
+      }
+    },
+    {"name": "self-replay",
+      "gate": "support.actors",
+      "attack": "two contracts held by one key, in a family with two holders: one worker replaying its own trajectory as independent support",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "gate": "support.actors"
+      }
+    },
+    {"name": "contest-smuggled-field",
+      "gate": "contest.shape",
+      "attack": "a contest carrying an extra key, hoping a reader takes it for a promotion or an exception",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.shape"
+      }
+    },
+    {"name": "contest-phantom",
+      "gate": "contest.hypothesis",
+      "attack": "a contest citing a position that is no admitted hypothesis, so the contested stage could be planted on a subject nobody proposed",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.hypothesis"
+      }
+    },
+    {"name": "contest-forged-evidence",
+      "gate": "contest.evidence",
+      "attack": "a contest whose evidence is a raise carrying a finding: a question dressed as a counter-observation",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.evidence"
+      }
+    },
+    {"name": "contest-unselected",
+      "gate": "contest.selected",
+      "attack": "a contest whose evidence lies on a contract the applies-when never selected, so the claim was never supposed to hold there",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.selected"
+      }
+    },
+    {"name": "held-out-forgery",
+      "gate": "contest.held_out",
+      "attack": "a contest citing the support set itself as counter-evidence",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.held_out"
+      }
+    },
+    {"name": "promotion-traversal",
+      "gate": "promotion.shape",
+      "attack": "a promotion whose lesson path climbs out of the store through .., naming a file the store's lint never sees",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.shape"
+      }
+    },
+    {"name": "promotion-of-raw-proposal",
+      "gate": "promotion.hypothesis",
+      "attack": "a promotion citing a well-shaped proposal a claim key raw-pushed past the boundary",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.hypothesis"
+      }
+    },
+    {"name": "contested-promotion",
+      "gate": "promotion.contested",
+      "attack": "a promotion of a hypothesis a contest already stands against",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.contested"
+      }
+    },
+    {"name": "unknown-carrier",
+      "gate": "promotion.carrier",
+      "attack": "a promotion naming a carrier outside the member set (a prompt), so no rule would know where the lesson lands",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.carrier"
+      }
+    },
+    {"name": "stamps-unordered",
+      "gate": "promotion.stamps",
+      "attack": "a promotion whose expiry precedes its last validation, so the lesson would never be due for revalidation",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.stamps"
+      }
+    },
+    {"name": "digest-malformed",
+      "gate": "promotion.digest",
+      "attack": "a promotion whose digest is not a sha256, so no reader could verify the file it names",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.digest"
+      }
+    },
+    {"name": "smuggled-role-lesson",
+      "gate": "promotion.adversarial",
+      "attack": "a role carrier promoted citing a pass on an ordinary contract that carries no eval marker",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "raw-pass",
+      "gate": "promotion.adversarial",
+      "attack": "a pass a key raw-pushed before it was granted verdict, cited as the adversarial evaluation",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "borrowed-pass",
+      "gate": "promotion.adversarial",
+      "attack": "a pass on an eval whose marker binds another hypothesis, and one bound to another carrier revision",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "stale-pass",
+      "gate": "promotion.adversarial",
+      "attack": "a pass on an eval filed before the hypothesis existed: a counter-trajectory constructed against nothing",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "fail-as-survival",
+      "gate": "promotion.adversarial",
+      "attack": "a fail verdict cited as the adversarial evaluation",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "support-failed-later",
+      "gate": "promotion.support",
+      "attack": "a hypothesis admitted over a trajectory that fails afterwards, promoted as if its support still stood",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.support"
+      }
+    },
+    {"name": "frontmatter-missing",
+      "gate": "lint.frontmatter",
+      "attack": "a lesson file with no frontmatter block, so nothing binds it to a hypothesis",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.frontmatter"
+      }
+    },
+    {"name": "frontmatter-drift",
+      "gate": "lint.hypothesis",
+      "attack": "a lesson file citing another hypothesis than the fact that promoted it",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.hypothesis"
+      }
+    },
+    {"name": "predicate-drift",
+      "gate": "lint.applies_when",
+      "attack": "a lesson file whose applies-when is wider than the hypothesis's, so the file would be read on claims the boundary never admitted it for",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.applies_when"
+      }
+    },
+    {"name": "support-drift",
+      "gate": "lint.support",
+      "attack": "a lesson file listing support the hypothesis never cited",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.support"
+      }
+    },
+    {"name": "fabricated-provenance",
+      "gate": "lint.provenance",
+      "attack": "a provenance anchor the repository lacks at its commit",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.provenance"
+      }
+    },
+    {"name": "digest-drift",
+      "gate": "lint.digest",
+      "attack": "a fact whose digest is not the bytes of the file at its anchor: the file was rewritten after the promotion",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.digest"
+      }
+    },
+    {"name": "unmerged-anchor",
+      "gate": "lint.ancestry",
+      "attack": "an anchor commit that exists on a branch and is no ancestor of the head: the promotion PR never merged",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.ancestry"
+      }
+    },
+    {"name": "stamps-future",
+      "gate": "lint.stamps",
+      "attack": "a last-validated stamp in the future, so the lesson reads as freshly validated forever",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.stamps"
+      }
+    },
+    {"name": "carrier-drift",
+      "gate": "lint.carrier",
+      "attack": "a lesson file naming another carrier than the fact, so the file lands where the boundary never judged it",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.carrier"
+      }
+    },
+    {"name": "worker-proposes",
+      "gate": "",
+      "attack": "a claim key proposes over its own admitted observations",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "reason": "out of grant"
+      }
+    },
+    {"name": "root-proposes",
+      "gate": "",
+      "attack": "a governance root, holding operator implicitly, proposes: the fifth no-fallback row",
+      "expect": {
+        "verb": "curation.hypothesis.proposed",
+        "reason": "out of grant"
+      }
+    },
+    {"name": "worker-granted-curate",
+      "gate": "",
+      "attack": "the operator grants curate to a claim key, so one key could observe and propose",
+      "expect": {
+        "verb": "actor.granted",
+        "reason": "disjoint"
+      }
+    },
+    {"name": "ungated-eval",
+      "gate": "",
+      "attack": "an executable eval specified without gate evidence, so an unreviewed counter-trajectory could be the adversarial evaluation",
+      "expect": {
+        "verb": "contract.specified",
+        "reason": "gate"
+      }
+    },
+    {"name": "raw-pushed-promotion",
+      "gate": "promotion.adversarial",
+      "attack": "a promotion the adversarial gate refused, pushed past the boundary: the fold re-judges it at its position, binds nothing, and no claim receives it",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "raw-pushed-contest",
+      "gate": "contest.held_out",
+      "attack": "a contest the held-out gate refused, pushed past the boundary to disable a legitimate lesson: the fold re-judges it at its position and the lesson keeps surfacing",
+      "expect": {
+        "verb": "curation.hypothesis.contested",
+        "gate": "contest.held_out"
+      }
+    },
+    {"name": "pass-at-another-position",
+      "gate": "promotion.adversarial",
+      "attack": "the survived eval's submission position cited as its verdict: a pass exists on the chain, at another position",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.adversarial"
+      }
+    },
+    {"name": "contested-surfacing",
+      "gate": "promotion.contested",
+      "attack": "a promoted lesson re-promoted after its contest, hoping the delivery reads the promotion rather than the stage",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.contested"
+      }
+    },
+    {"name": "stamps-unreviewed",
+      "gate": "lint.stamps",
+      "attack": "a promotion recording lifecycle dates the lesson PR never reviewed: the fact's expires is later than the frontmatter's, so the lesson would outlive its review",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.stamps"
+      }
+    },
+    {"name": "re-promotion-stale-stamps",
+      "gate": "promotion.revalidation",
+      "attack": "a re-promotion of the same path at a new anchor with a fresh adversarial pass and the old last_validated stamp, so the file changes without anyone revalidating it",
+      "expect": {
+        "verb": "curation.lesson.promoted",
+        "gate": "promotion.revalidation"
+      }
+    },
+    {"name": "retirement-smuggled-field",
+      "gate": "retirement.shape",
+      "attack": "a retirement carrying an extra key (a rewritten lesson body), hoping a reader takes the retirement as an edit of the evidence",
+      "expect": {
+        "verb": "curation.lesson.retired",
+        "gate": "retirement.shape"
+      }
+    },
+    {"name": "regression-without-revert",
+      "gate": "retirement.reason",
+      "attack": "a regression retirement without the revert's pr, a pr riding the expired reason, and a reason the contract does not name: each takes the promotion out without the evidence its reason requires",
+      "expect": {
+        "verb": "curation.lesson.retired",
+        "gate": "retirement.reason"
+      }
+    },
+    {"name": "retire-superseded-promotion",
+      "gate": "retirement.promotion",
+      "attack": "a retirement citing the earlier promotion of a path after a revalidation superseded it, so the path reads retired while its latest promotion stands",
+      "expect": {
+        "verb": "curation.lesson.retired",
+        "gate": "retirement.promotion"
+      }
+    },
+    {"name": "superseded-by-itself",
+      "gate": "retirement.superseded_by",
+      "attack": "a superseded retirement whose superseded_by names the retired promotion itself, an earlier position, or a position that is no promotion, so the conclusion is revoked with nothing standing in its place",
+      "expect": {
+        "verb": "curation.lesson.retired",
+        "gate": "retirement.superseded_by"
+      }
+    },
+    {"name": "deadend-retire-cross-contract",
+      "gate": "deadend_retirement.shape",
+      "attack": "a dead-end retirement on one contract citing another contract's dead end, so a curator retires evidence on a trajectory the act is not a fact on",
+      "expect": {
+        "verb": "curation.deadend.retired",
+        "gate": "deadend_retirement.shape"
+      }
+    },
+    {"name": "deadend-retire-phantom",
+      "gate": "deadend_retirement.deadend",
+      "attack": "a dead-end retirement citing a park, not a dead end, so the act flags an observation that was never a dead end",
+      "expect": {
+        "verb": "curation.deadend.retired",
+        "gate": "deadend_retirement.deadend"
+      }
+    },
+    {"name": "deadend-retire-same-environment",
+      "gate": "deadend_retirement.environment",
+      "attack": "a dead-end retirement naming the environment the dead end was recorded in, so the dead end is flagged while it still applies",
+      "expect": {
+        "verb": "curation.deadend.retired",
+        "gate": "deadend_retirement.environment"
+      }
+    },
+    {"name": "unretire-without-retirement",
+      "gate": "deadend_retirement.standing",
+      "attack": "an un-retirement of a dead end nobody retired, planting a standing act that a later retirement would then have to un-do",
+      "expect": {
+        "verb": "curation.deadend.unretired",
+        "gate": "deadend_retirement.standing"
+      }
+    },
+    {"name": "duplicate-lesson",
+      "gate": "lint.duplicate",
+      "attack": "a second lesson file citing the hypothesis a file already carries, so the store holds two conclusions for one claim",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.duplicate"
+      }
+    },
+    {"name": "frontmatter-smuggled-key",
+      "gate": "lint.structure",
+      "attack": "a frontmatter key the contract does not name (a stage), a body missing its evidence section, and the sections out of order: each reads as a lesson while carrying something the README never asked for",
+      "expect": {
+        "verb": "lint",
+        "gate": "lint.structure"
+      }
+    }
+  ]
+}

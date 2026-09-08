@@ -1,0 +1,18 @@
+{
+  "lane": "maintenance",
+  "kind": "lane",
+  "summary": "Runs one unattended pass (reap, lint, file, rebuild, checkpoint) with no scheduler and no wake channel: reaps only an unanswered request rather than a timeout, files defect contracts rather than escalations, and crosses the same admission boundary as any other actor, holding no private powers.",
+  "grants": [
+    "maintenance",
+    "operator"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [],
+  "liveness_from": [],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/maintenance.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "lane": "implementer",
+  "kind": "lane",
+  "summary": "Takes one claimed card from a merged plan to a reviewable PR, metering what it spends and exiting deliberately.",
+  "grants": [
+    "claim"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [
+    "claim take",
+    "budget reserve",
+    "budget settle",
+    "budget release",
+    "submission make",
+    "claim release",
+    "claim park"
+  ],
+  "liveness_from": [
+    "claim take",
+    "budget settle",
+    "submission make"
+  ],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/implementer.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md",
+    "common/acts-through-verbs.md",
+    "common/liveness.md",
+    "common/deliberate-exit.md"
+  ]
+}

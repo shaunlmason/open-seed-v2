@@ -1,0 +1,46 @@
+{
+  "posture": "enforced-self-hosted",
+  "protocol": "seed/4",
+  "governance": {
+    "root": "declared-at-init",
+    "owners": ["@shaunlmason"],
+    "change_process": "pr+owner-review"
+  },
+  "protected": [
+    "spec",
+    "internal/admit",
+    "internal/transition",
+    "internal/keyring",
+    "internal/verdict",
+    "internal/seal",
+    "internal/eval",
+    "evals",
+    "internal/curation",
+    "knowledge/lessons",
+    "lanes",
+    "cmd/seed-admit",
+    "cmd/covergate",
+    "Makefile",
+    ".github/workflows",
+    "scripts"
+  ],
+  "checkpoints": {"trust": "signers"},
+  "boundary": {
+    "accepts": ["cross-repo", "mirror-edit", "dashboard-action"],
+    "ingress": "git@github.com:shaunlmason/open-seed-v2.git"
+  },
+  "guardrails": {
+    "squads": {
+      "core": {"default": "standard", "max_agent": "standard"}
+    },
+    "paths": [
+      {"prefix": "internal/admit", "min": "critical"},
+      {"prefix": "spec/transitions.json", "min": "critical"}
+    ]
+  },
+  "teams": {
+    "squads": [
+      {"name": "core", "lanes": ["dispatcher", "planner", "implementer", "verifier", "curator", "maintenance", "supervisor", "observer"]}
+    ]
+  }
+}

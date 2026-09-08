@@ -1,0 +1,18 @@
+{
+  "lane": "verifier",
+  "kind": "lane",
+  "summary": "Renders verdicts at the independence level the record supports, declaring its own runtime tuple where the tier requires separation from the work, never with an implementing key on the same contract; scores a rubric item by item with cited evidence and explicit uncertainty, and defers what it cannot judge to a human.",
+  "grants": [
+    "verdict",
+    "sealer"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [],
+  "liveness_from": [],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/verifier.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md"
+  ]
+}

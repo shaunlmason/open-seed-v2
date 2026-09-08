@@ -1,0 +1,146 @@
+# seed-release (dispatch-only; plans/os-2e46aa2f.md; docs/next-build-plan.md
+# section 5, the distribution step). Cuts a release of Seed, the successor
+# under next/. The binaries are built from next/ for six targets with the
+# version stamped and their archives and sha256 sums written first; only
+# then is the tag minted at HEAD in-runner, so the tag and the released
+# commit can never disagree, no contributor needs tag-push rights (the
+# engine repository's discipline), and a build that fails leaves no tag
+# behind. The release is created as a draft, the checksums are attested
+# with build provenance, and the draft is published last, so a failed
+# attestation leaves a draft nobody can download rather than a public
+# release without the provenance its notes promise. A re-run for the same
+# version on the same commit resumes the cut; a tag that points elsewhere,
+# or a release already published, refuses: a release is cut once. No
+# schedule and no push trigger: a release is the operator's act at the
+# distribution step, and the CI-identity lint (next/internal/protections)
+# holds scheduled workflows to read-only. The job runs in the
+# seed-release environment and only from the default branch: the
+# environment's deployment branch policy, an operator precondition
+# (next/docs/handbook.md section 1), is what keeps a branch's edited copy
+# of this file away from these privileges, and the ref guard restates it
+# in the file as defense in depth. Seed's tags live under seed/v*, apart
+# from the template's v* releases and the seed-anchor/* state anchors,
+# and the reconciled seed-release-tags ruleset makes them immutable on
+# the forge as the hook already does on a git server. Every third-party
+# action is pinned to a commit SHA: this job holds OIDC, attestation and
+# write privileges, and nothing executable in it resolves through a
+# mutable tag.
+name: seed-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Seed version to release (semver without the v, e.g. 0.1.0); the tag is seed/v<version> at HEAD"
+        required: true
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+concurrency: seed-release
+
+jobs:
+  release:
+    # The environment carries the deployment branch policy that keeps the
+    # release privileges on the default branch; the ref guard is the same
+    # rule restated here, so a dispatch from any other ref is skipped
+    # before the checkout.
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    environment: seed-release
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Refuse a version that is not semver, a tag that points elsewhere, or a release already published
+        run: |
+          set -eu
+          # semver.org's grammar as a POSIX extended regular expression: no
+          # leading zeroes in a numeric identifier, prerelease and build
+          # identifiers as the specification lists them, nothing trailing.
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$'
+          if ! printf '%s\n' "$VERSION" | grep -Eq "$semver"; then
+            echo "version must be semver without the v (no leading zeroes, nothing trailing): $VERSION"; exit 1
+          fi
+          tag="seed/v$VERSION"
+          # The commit the tag points at on the remote, if it exists: the
+          # ref itself for a lightweight tag, the peeled line (listed
+          # last) for an annotated one.
+          at=$(git ls-remote --tags origin "refs/tags/$tag" "refs/tags/$tag^{}" | tail -1 | cut -f1)
+          if [ -n "$at" ] && [ "$at" != "$GITHUB_SHA" ]; then
+            echo "tag $tag already exists at $at, not at $GITHUB_SHA: a release is cut once"; exit 1
+          fi
+          state=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq 'if .isDraft then "draft" else "published" end' 2>/dev/null || echo none)
+          if [ "$state" = published ]; then
+            echo "release $tag is already published: a release is cut once"; exit 1
+          fi
+          [ -z "$at" ] || echo "tag $tag already at $GITHUB_SHA: resuming the release (existing release: $state)"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          echo "TAG_AT=$at" >> "$GITHUB_ENV"
+          echo "RELEASE_STATE=$state" >> "$GITHUB_ENV"
+
+      - uses: ./.github/actions/go-env
+
+      - name: Build seed and seed-admit for six targets, the version stamped
+        working-directory: next
+        run: |
+          set -eu
+          mkdir -p ../dist
+          for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64; do
+            os="${target%/*}"; arch="${target#*/}"
+            out="../dist/seed_${VERSION}_${os}_${arch}"
+            mkdir -p "$out"
+            ext=""; [ "$os" = windows ] && ext=".exe"
+            for cmd in seed seed-admit; do
+              CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -trimpath \
+                -ldflags "-s -w -X github.com/shaunlmason/open-seed-v2/internal/version.Version=$VERSION" \
+                -o "$out/$cmd$ext" "./cmd/$cmd"
+            done
+            cp ../LICENSE "$out/"
+            if [ "$os" = windows ]; then
+              (cd ../dist && zip -qr "seed_${VERSION}_${os}_${arch}.zip" "seed_${VERSION}_${os}_${arch}")
+            else
+              tar -C ../dist -czf "$out.tar.gz" "seed_${VERSION}_${os}_${arch}"
+            fi
+            rm -r "$out"
+          done
+
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum seed_*.tar.gz seed_*.zip > checksums.txt && cat checksums.txt
+
+      - name: Mint the tag at HEAD (seed/v<version>) now that the artifacts exist; a tag already at HEAD is kept
+        run: |
+          set -eu
+          if [ -n "$TAG_AT" ]; then
+            echo "tag $TAG already at $GITHUB_SHA: kept"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "refs/tags/$TAG"
+
+      - name: Create the release as a draft (a draft left by an incomplete run is replaced)
+        run: |
+          set -eu
+          protocol=$(grep -o 'seed/[0-9]*' next/internal/version/version.go | sort -t/ -k2 -n | tail -1)
+          if [ "$RELEASE_STATE" = draft ]; then
+            gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes
+          fi
+          gh release create "$TAG" dist/seed_*.tar.gz dist/seed_*.zip dist/checksums.txt \
+            --repo "$GITHUB_REPOSITORY" --draft --title "Seed $VERSION" \
+            --notes "Seed $VERSION at $GITHUB_SHA, protocol register up to $protocol. Binaries: seed and seed-admit for linux, darwin and windows on amd64 and arm64, built with -trimpath from next/. Verify an archive against checksums.txt and its provenance with: gh attestation verify <archive> --repo $GITHUB_REPOSITORY"
+
+      - name: Attest build provenance, before the release is public
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-checksums: dist/checksums.txt
+
+      - name: Publish the release (the draft goes public once the provenance exists)
+        run: gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false

@@ -1,0 +1,11 @@
+{
+  "history": 40,
+  "writers": 200,
+  "metrics": {
+    "admission_ms": {"ceiling": 2, "provenance": "copied 2026-09-04 from the per-PR profile (perf/budgets.json): one admit.Check of a fresh draft at the tip does not grow with the enrolled actors; read 0.124 and 0.172 ms in the two 200-actor runs (plans/os-a00d3f34.md D2)"},
+    "replay_ms": {"ceiling": 350, "provenance": "measured 2026-09-04 on a 4-core Linux host: 109.1 and 114.0 ms replaying the 40-contract history plus the 200 enrolled actors (400 records beyond the per-PR history); ceiling ~3x the slowest (plans/os-a00d3f34.md D2)"},
+    "rebuild_ms": {"ceiling": 2500, "provenance": "measured 2026-09-04: 787.1 and 804.2 ms rebuilding every projection from the same chain; ceiling ~3x the slowest (plans/os-a00d3f34.md D2)"},
+    "contention_ms": {"ceiling": 6300000, "provenance": "measured 2026-09-04 on a 4-core Linux host: 2065826 and 2071708 ms for 200 writers, each its own enrolled actor, through the seed-admit hook on a bare remote, both runs landing every writer with 200 distinct actors in the chain; ceiling ~3x the slowest, headroom for a slower runner (plans/os-a00d3f34.md D2). Earlier runs that signed every writer with one key read 970948 and 955154 ms and are superseded: they measured one actor's contention"},
+    "attempts_ratio": {"ceiling": 135, "provenance": "measured 2026-09-04: 66.80 and 67.27 attempts per admitted record at 200 actors on the two runs (a landed writer leaves the pool, so the ratio sits under the writers/2 of a pool that never shrinks); ceiling 2x the reading, the per-PR convention (plans/os-a00d3f34.md D2)"}
+  }
+}

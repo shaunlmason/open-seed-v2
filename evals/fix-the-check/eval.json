@@ -1,0 +1,6 @@
+{
+  "name": "fix-the-check",
+  "summary": "greet.sh prints a misspelled greeting and check.sh refuses it; the work is the one-line fix",
+  "tier": "trivial",
+  "acceptance": "evals/fix-the-check/fixture/accept.md"
+}

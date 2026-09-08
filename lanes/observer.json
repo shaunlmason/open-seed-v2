@@ -1,0 +1,17 @@
+{
+  "lane": "observer",
+  "kind": "role",
+  "summary": "Records what an external authority did, as an observation the ledger never pretends to control: the merge that ends a contract's loop, the checks a forge ran, the lesson PR whose merge promotes a hypothesis.",
+  "grants": [
+    "observer"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [],
+  "liveness_from": [],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/observer.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md"
+  ]
+}

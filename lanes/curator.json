@@ -1,0 +1,17 @@
+{
+  "lane": "curator",
+  "kind": "lane",
+  "summary": "Runs the offline learning loop: observations to hypotheses to validated lessons. Proposes hypotheses and promotes nothing: holds curate, the proposal grant disjoint from implementation, and no other write.",
+  "grants": [
+    "curate"
+  ],
+  "orients_from": "seed situation --remote <repo> --key <key> --since <position>",
+  "acts_through": [],
+  "liveness_from": [],
+  "inbox": "Push channels wake; position-stamped reads convince. A wake, an event or a message is a hint to re-read, never a fact about the world.",
+  "fragments": [
+    "lane/curator.md",
+    "common/orienting-read.md",
+    "common/one-inbox.md"
+  ]
+}

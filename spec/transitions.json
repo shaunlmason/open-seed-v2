@@ -1,0 +1,28 @@
+{
+  "schema_version": "1",
+  "states": [
+    {"name": "backlog", "initial": true},
+    {"name": "ready"},
+    {"name": "in_progress"},
+    {"name": "review"},
+    {"name": "blocked"},
+    {"name": "done", "terminal": true},
+    {"name": "cancelled", "terminal": true}
+  ],
+  "transitions": [
+    {"verb": "intent.filed", "from": null, "to": "backlog"},
+    {"verb": "contract.specified", "from": ["backlog", "ready"], "to": "ready"},
+    {"verb": "claim.taken", "from": ["ready"], "to": "in_progress", "exclusive": true},
+    {"verb": "submission.made", "from": ["in_progress"], "to": "review"},
+    {"verb": "claim.released", "from": ["in_progress"], "to": "ready"},
+    {"verb": "claim.parked", "from": ["in_progress"], "to": "blocked"},
+    {"verb": "claim.reaped", "from": ["in_progress"], "to": "ready"},
+    {"verb": "merge.observed", "from": ["review"], "to": "done"},
+    {"verb": "contract.returned", "from": ["review"], "to": "ready"},
+    {"verb": "contract.blocked", "from": ["ready"], "to": "blocked"},
+    {"verb": "contract.unblocked", "from": ["blocked"], "to": "ready"},
+    {"verb": "contract.cancelled", "from": ["backlog", "ready", "blocked", "review"], "to": "cancelled"},
+    {"verb": "escalation.raised", "from": ["ready", "review"], "to": "blocked"},
+    {"verb": "decision.recorded", "from": ["blocked"], "to": "ready"}
+  ]
+}

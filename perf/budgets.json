@@ -1,0 +1,11 @@
+{
+  "history": 40,
+  "writers": 24,
+  "metrics": {
+    "admission_ms": {"ceiling": 2, "provenance": "measured 2026-09-03 on a quiet 8-core Linux host: 0.118, 0.392 and 0.150 ms over three cold runs; ceiling ~5x the slowest, since a sub-millisecond reading is mostly scheduler jitter (plans/os-7508ab9e.md D6)"},
+    "replay_ms": {"ceiling": 200, "provenance": "measured 2026-09-03: 64.6, 51.6 and 60.7 ms over three cold runs of the 40-contract history; ceiling ~3x the slowest (plans/os-7508ab9e.md D6)"},
+    "rebuild_ms": {"ceiling": 900, "provenance": "measured 2026-09-03: 273, 281 and 304 ms over three cold runs; ceiling ~3x the slowest (plans/os-7508ab9e.md D6)"},
+    "contention_ms": {"ceiling": 60000, "provenance": "measured 2026-09-03: 17833, 18647 and 18899 ms for 24 writers through the seed-admit hook on a bare remote; ceiling ~3x the slowest (plans/os-7508ab9e.md D6)"},
+    "attempts_ratio": {"ceiling": 25, "provenance": "measured 2026-09-03: 12.5 attempts per admitted record at 24 writers on each of three runs (the optimistic loop's expected writers/2); ceiling 2x the reading (plans/os-7508ab9e.md D6)"}
+  }
+}

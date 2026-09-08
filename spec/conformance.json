@@ -1,0 +1,1264 @@
+{
+  "pillars": [
+    {
+      "id": "A",
+      "title": "The Ledger",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Every coordination fact is an event on a single per-repo ledger ref; no second writable store of coordination state exists anywhere in the system.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#79 (chain/segments/HEAD), #85 (seed ledger verify/show); Phase 1 exit line (charter III.A: met); #94 (the validator the ledger ref's sole writer under enforced)",
+          "note": "Phase 1 exit line claims III.A whole (charter III.A: met), not walked row by row"
+        },
+        {
+          "row": 2,
+          "text": "Events carry timestamp, actor fingerprint, verb, subject, schema-valid payload, previous-event hash, and a signature over the canonical form; the entire chain verifies from genesis with one command.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#76 (event model, JCS canonical form, Ed25519), #85 (seed ledger verify: the chain from genesis in one command); Phase 1 exit line",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Ordering authority is admitted ancestry; no writer asserts a global sequence number; ordinals used by projections and citations are derived.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#79 (chain/segments/HEAD, positions derived), #85 (position-stamped verify refusals); Phase 1 exit line (charter III.A: met)",
+          "note": "Phase 1 exit line claims III.A whole (charter III.A: met), not walked row by row"
+        },
+        {
+          "row": 4,
+          "text": "Any mutation *within* retained history — reorder, rewrite, interior deletion, forgery — is detected by chain verification and (*enforced-only*) refused at the remote; the drill proves both with corrupted fixtures and a raw-git adversary.",
+          "posture": "mixed",
+          "status": "met",
+          "phase": "2",
+          "evidence": "#79, #83, #85 (corrupted fixtures: reordered, rewritten, forged-sig, bad-prev, lying HEAD, lying genesis, detected with positioned reasons); #94 (rewrite, truncation, force-update and deletion refused at the hook), #99 TestDrillRawAdversaryPerPosture (cmd/seed-admit/drill_test.go)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Rollback to a valid earlier tip is treated honestly as a freshness problem, not claimed as chain-detectable: clients persist and enforce head monotonicity; witness divergence surfaces a rollback on the next fetch by any actor or clone that saw the later tip; enforced remotes refuse non-fast-forward; the rollback drill proves detection through each path; and the fresh-clone staleness bound (newest out-of-band checkpoint or head attestation) is documented.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#86 (monotonic head, the rollback drill, vanished-ref regression refusal; exit 12 head_regression)",
+          "note": "Phase 1 exit claims III.A whole; the fresh-clone staleness bound clause is named by no record"
+        },
+        {
+          "row": 6,
+          "text": "Payload data classification is enforced at admission: coordination facts and references only; content bodies live in an addressed artifact store with a documented erasure path, referenced by hash; the hostile-payload lint corpus passes.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#80 (payload classification lint, the hostile corpus) TestHostileCorpusRefuses (internal/classify); #135 (internal/artifact, the addressed store)",
+          "note": "the documented erasure path is named by no record (see row 7)"
+        },
+        {
+          "row": 7,
+          "text": "Erasure obligations are honorable: erasing a referenced artifact never breaks chain verification, and the erasure is itself an attributable event.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "os-db5cd353: TestArtifactEraseIsAttributableAndNeverBreaksTheChain (cmd/seed/artifact_cli_test.go: the erasure records under the operator's key, the bytes go, ledger verify is green, seal audit lists the erased subject with position, signer and reason and stays clean, a deletion with no record stays seal_evidence_missing, render names the erasure, a content artifact is erased on system), TestErasureAdmitsReferencedOnceUnderOperator and TestErasureIsAffordedWhereSomethingIsErasable (internal/admit/erasure_test.go), TestEraseEmptiesEachBucketAndNamesThem (internal/artifact); the surfacing half since #139: TestSealEndToEndCLI (cmd/seed/seal_cli_test.go)",
+          "note": "the first clause is structural (bodies are referenced by hash and never carried) and is now drilled; the second is artifact.erased, additive catalog growth from seed/1 under the operator grant, held to the subject's references and to once, folded, and read by the seal audit as an honored erasure rather than a missing-evidence finding (plans/os-db5cd353.md D1 to D5)"
+        },
+        {
+          "row": 8,
+          "text": "Checkpoints are signed by maintenance/operator identities, embed the projection state hash, and reference a retrievable canonical snapshot in the artifact store (fetch → verify against the signed hash → start); the materialization format is specified and versioned; a fresh clone's verification obligations (full replay once, or explicit trust in the signer set) are documented and the choice is declared, not defaulted; replay-from-checkpoint equals replay-from-genesis in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#205 (checkpoints persist a snapshot a fresh reader starts from, hash and location in a versioned payload, the store written first) TestMaintainCheckpointIsStartableByAFreshReader (cmd/seed/maintain_cli_test.go); #253 (checkpoints.trust declared never defaulted, the capable-signer rule, the replay-equals-genesis proof, spec/checkpoints.md)",
+          "note": ""
+        },
+        {
+          "row": 9,
+          "text": "A genesis event names the governance root and protocol version; version mismatch refuses with a distinct exit code.",
+          "posture": "any",
+          "status": "met",
+          "phase": "1",
+          "evidence": "#83 (genesis names the governance root and seed/0, genesis-payload version bootstrap), #85 (active-version append); exit 10 version_mismatch (spec/envelope.md)",
+          "note": "Phase 1 exit line claims III.A whole (charter III.A: met), not walked row by row"
+        },
+        {
+          "row": 10,
+          "text": "`halt.declared` stops admission of everything except an operator's `halt.lifted`, enforced at the admission boundary; the halt drill includes a client-bypassing writer (*enforced-only*).",
+          "posture": "mixed",
+          "status": "met",
+          "phase": "2",
+          "evidence": "#84 (halt in the rule set, exit 7 halted, operator-only lift) TestHaltRefusesEverythingButLift (internal/halt); #99 TestDrillRawAdversaryPerPosture (cmd/seed-admit/drill_test.go)",
+          "note": "the Phase 10 and 12 records name the halt drill with the raw-git bypass under enforced among III.O row 4's standing drills"
+        },
+        {
+          "row": 11,
+          "text": "Reads, drafts, planning, and work on admitted claims are offline-capable; exclusivity-taking and reservation-spending verbs are online-only and documented as such.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#123 (the online-only client seam: exclusive verbs refuse the local append, drilled at the offline boundary)",
+          "note": ""
+        },
+        {
+          "row": 12,
+          "text": "Ledger performance is budgeted and tracked in CI: admission latency, replay time, projection rebuild time, against a representative history.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#253 TestRunReMeasuresColdOnce (internal/perfgate); admission latency, replay, rebuild and the storm measured against perf/budgets.json over internal/history's representative chain under make check-next",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "title": "The Admission Boundary",
+      "rows": [
+        {
+          "row": 1,
+          "text": "A stateless admission validator exists and (*enforced-only*) is the only writer of the ledger ref; it validates signature, capability, fence, transition, schema, data classification, protocol version, halt state, and budget reservation before atomic admission, and refuses with structured, attributable rejections.",
+          "posture": "mixed",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#94 (the pre-receive hook); #252 TestServiceAgreesWithTheBoundaryAndTheHook, TestServiceAdmitsRefusesAndTheForgeRefusesTheActor (cmd/seed-admit/serve_test.go); TestDrillRawAdversaryPerPosture (cmd/seed-admit/drill_test.go)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "The validator holds no unique durable state: a replacement instance rebuilds entirely from a clone, proven by a kill-and-replace drill.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#99 TestDrillKillAndReplace (cmd/seed-admit/drill_test.go); #252 TestServiceKillAndReplace (cmd/seed-admit/serve_test.go)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "All three admission postures are implemented; every deployment declares its posture; cooperative mode's consequences are stated by the preflight tool and the README in plain words; no deployment lands in cooperative mode by default.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#98 (the declaration, the cooperative consequence printed verbatim by seed doctor); #252 (spec/postures.md; posture.Load refusing ErrUndeclared, no default)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "(*enforced-only*) Actor git credentials cannot write the ledger ref directly — verified by an attempted direct push in the drill.",
+          "posture": "enforced-only",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#250 TestCodeRefProtectedSurface, TestCodeRefNoLedgerAndNoDeclaration (cmd/seed-admit/coderef_test.go); #252 TestDesiredDerivesFromTheDeclaration (internal/protections/protections_test.go)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "(*enforced-only*) The compromised-actor drill passes in CI: a valid-key, valid-credential adversary with raw git access cannot claim unauthorized work, approve itself, rewrite history, alter gates, impersonate another actor, exceed its lease, exceed its reservation, or admit an invalid transition.",
+          "posture": "enforced-only",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#250 TestCeilingHoldsAtThePush, TestOneDerivationLedgerAgrees, TestCoverageBothWays, TestResidualsArePinned, TestTablesValidate (internal/redteam/redteam_test.go); TestCodeRefRulesAreLoadBearing (cmd/seed-admit)",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Admission may shard proposal intake without changing semantics; ordering remains solely the admitted chain.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "intake is single-path: one admission boundary (internal/admit behind cmd/seed-admit), no second intake, #94 (the validator the ledger ref's sole writer under enforced), and abstention is pinned in the tree rather than in the table by TestIntakeIsSinglePathAsTheRowsEvidenceStates, which reads the admission surface and fails the moment a per-shard context or a second rule set appears; ordering is solely the admitted chain, III.A row 3's claim since Phase 1, #79 (positions derived from admitted ancestry), #85 (position-stamped verify refusals)",
+          "note": "a permission, met by abstention (os-9ef9ab34): the charter's first clause binds a system that shards proposal intake, and this one does not, so it changes no semantics by construction; the second clause is unconditional and is III.A row 3's claim. A system that later shards re-earns the row by showing semantics unchanged (sharded intake is os-7953612b, a true extra whose absence conforms)"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "title": "Streams and the hot path",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Traffic is classified: coordination facts are admitted events; liveness, progress, and fine-grained metering ride non-authoritative observation channels.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#131 (observation streams v0, spec/observations.md: coordination facts are admitted events, liveness and metering ride lossy channels)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Progress liveness is measured by monotonic progress counts, never file modification time; long-running steps carry a declared in-step state; the ledger records only material transitions (claim, coarse milestones, wedge declaration, run settlement, park/reap).",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#131 TestMilestoneSummarizationBoundary, TestWedgeDeclaredOperatorFact (internal/admit/observation_test.go); #191 TestLivenessRidesTheWorkAndIsKeyedToActorAndFence (internal/loop/loop_test.go)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Expiry (no observations) and wedging (observations without progress advancement) are distinct, visible conditions with distinct reap heuristics, drilled.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#131 (expiry vs. wedge rendered as distinct report states); #205 TestMaintainRefusesAWedgeCitingTheWrongFence, TestMaintainReapsOnAWedgeCitingTheActiveFence (cmd/seed/maintain_cli_test.go)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "A contention benchmark demonstrates the target scale (hundreds of concurrent actors) without unrelated writes racing each other's admissions pathologically; tracked in CI.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "12",
+          "evidence": "#253 TestRunReMeasuresColdOnce (internal/perfgate); the storm's wall time and attempts ratio against perf/budgets.json, 24 writers through the hook on every make check-next",
+          "note": "a scheduled run at target scale, build plan backlog; walked again at Phase 13's exit"
+        },
+        {
+          "row": 5,
+          "text": "Observation channels are lossy by declaration: losing every observation stream loses no coordination state.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#131 (fence-keyed lossy streams by declaration, spec/observations.md: losing every stream loses no coordination state)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "title": "Projections",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Every read surface is a deterministic function of a ledger prefix (plus declared observation inputs), stamped with its build position, and rebuildable byte-identically with one command.",
+          "posture": "any",
+          "status": "met",
+          "phase": "4",
+          "evidence": "#109 (deterministic build, stamps, one-command rebuild) TestRebuildByteIdenticalAndStamped (internal/project); #117 (the standard projections); #131 (the engine Inputs seam, input-bearing build identity)",
+          "note": "no Phase 4 exit line in progress.md; traced to the item entries (4.3 records the phase complete)"
+        },
+        {
+          "row": 2,
+          "text": "No code path writes a projection directly or treats one as authoritative; the write-boundary lint enforces it.",
+          "posture": "any",
+          "status": "met",
+          "phase": "4",
+          "evidence": "#118 (the write-boundary lint under check-next, seam/write-separation, locked trees)",
+          "note": "no Phase 4 exit line in progress.md; traced to the item entries (4.3 records the phase complete)"
+        },
+        {
+          "row": 3,
+          "text": "Staleness is visible everywhere projected state is shown; consumers can demand a minimum position.",
+          "posture": "any",
+          "status": "met",
+          "phase": "4",
+          "evidence": "#117 (seed project current, exit 15 stale, the stale envelope position, --min-position)",
+          "note": "no Phase 4 exit line in progress.md; traced to the item entries (4.3 records the phase complete)"
+        },
+        {
+          "row": 4,
+          "text": "The cache projection delivers single-machine read throughput with zero authority (mid-operation deletion loses nothing).",
+          "posture": "any",
+          "status": "met",
+          "phase": "4",
+          "evidence": "#119 (the SQLite cache as a registered projection; the mid-operation deletion drill)",
+          "note": "no Phase 4 exit line in progress.md; traced to the item entries (4.3 records the phase complete)"
+        },
+        {
+          "row": 5,
+          "text": "External mirrors are one-way exporters; mirror-side edits arrive only as request events from governed identities, validated at admission; a conformance suite passes per exporter/adapter.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "#361 TestMirrorExporterSuite, TestMirrorMarkerRefusesRatherThanRepairs, TestMirrorPlanIsDeterministic, TestMirrorExposesNoSeedWritePath (mirror); TestMirrorCommandPlansAndApplies (cmd/seed-mirror); TestMirrorExportAndRequestIngressPerExporter (cmd/seed), under make check",
+          "note": "Phase 13 item 8 (os-b45c308d): the projection-only mirror component with its sealed exporter registry, one suite per registered exporter, joined to item 4's request ingress (#270)"
+        },
+        {
+          "row": 6,
+          "text": "Bidirectional synchronization is structurally impossible: no component holds both an export path and a coordination write path.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "#361 TestAuthorityBoundaryHoldsInTheTree, TestAuthorityBoundarySelfCheck (internal/authoritylint), under make check",
+          "note": "Phase 13 item 8 (os-b45c308d): the export and coordination-write classes are derived from each executable's import closure, never listed; the lint self-checks against planted overlaps"
+        },
+        {
+          "row": 7,
+          "text": "External facts enter only as observations by governed observers; nothing treats an observation as control.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "#361 TestExternalFactCatalogPins, TestObservationControlLint, TestObservationControlLintSelfCheck (internal/externalfact); TestGovernedObservationIsNotControl, TestCheckObservedNeedsSeed8 (internal/admit); TestExternalFactDischargesNothing (internal/obligation); TestGovernedObservationOverTheForges (cmd/seed), under make check",
+          "note": "Phase 13 item 8 (os-b45c308d): spec/external-facts.md is the closed inventory, pinned to the catalog and the keyring both ways; the forge readers are read-only sources in their own package; the invariance drill pins that an observation narrows and never widens (the observer lane on merge.observed, #137, #212; check.observed, #351)"
+        },
+        {
+          "row": 8,
+          "text": "The rebuild-everything-from-genesis drill runs green in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "4",
+          "evidence": "#109 TestRebuildByteIdenticalAndStamped (internal/project), under make check",
+          "note": "named among III.O row 4's standing drills by the Phase 10 and 12 records"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "title": "Identity, threat model, qualification",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Identity, credential, principal, and runtime are distinct concepts in the schemas and the threat model; no user-facing claim exceeds what signatures prove.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#100 (actor events, the keyring projection); #216 (principal and runtime as fields of the declared tuple, distinct from the signing key)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Every actor is a keypair; enrollment, grants, suspension, revocation are events; the keyring is a projection; admission verifies signatures on every proposal.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#100, #102 (signature and grant checks at admission on every proposal; the keyring a projection)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Enrolled kind (human/agent/service) is documented as an operator assertion; nothing security-relevant assumes kind is cryptographically proven.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#100 (kind a drilled operator assertion)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Agent enrollment requires exactly an identity plus a scoped credential; no inbound connectivity or registration server.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#100 (actor.enrolled carries the public key and the operator's assertion, nothing else); #145 (the wakeless poll-only drill: a worker needs no inbound path)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Grants are capability data checked at admission; out-of-grant verbs are refused structurally; operator-only verbs refuse non-operator keys; no agent key can approve its own work into done — by key disjointness.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#102 (the capability vocabulary checked on every verb, operator-only refusals structural); #135 (L1 independence, exit 17), #137",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Qualification binds to the runtime tuple (principal, harness+version, model family+version, tool policy, environment profile); grants cite tuples; adapters report the provisioned tuple; materially drifted tuples are out of grant.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#216 TestRunStartDeclaresTheTupleAndDriftIsOutOfGrant (cmd/seed), TestDriftIsPerFieldAgainstTheHolder (internal/admit), TestSmallTeamQualifiedWorkerIsOfferedAndHeldToItsConfiguration (cmd/seed/modes_e2e_test.go); #221 (mints feeding the same set rule)",
+          "note": ""
+        },
+        {
+          "row": 7,
+          "text": "Scheduled spot-check evals re-test active tuples; failures suspend grants attributably without operator ceremony.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#221 TestDueOffersMintsAndDisqualifies, TestDueSpotChecksAgeFromTheDeclaredInstant (internal/eval), TestEvalLifecycleMintsDisqualifiesAndReTests (cmd/seed), TestSmallTeamEvalQualifiesAndDisqualifiesThroughTheProductionMachinery (cmd/seed/modes_e2e_test.go); #238 (verdict qualifications)",
+          "note": "scheduled is what a routine invoking seed eval act supplies, as the maintenance pass's schedule is the deployment's (Phase 10 record)"
+        },
+        {
+          "row": 8,
+          "text": "Key rotation and revocation are drilled: revocation ends the key's standing, reaps its claims, preserves its history's attribution, and (for verifier keys) triggers sealed-check keyring rotation.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "10",
+          "evidence": "#104 (standing ends, attribution preserved), #139 (sealed rotation on verifier-key revocation)",
+          "note": "Phase 10 record: UNMET, the reap arm routed to Phase 12 item 1's follow-up os-32d06c65; #267 merged it (Phase 12 record), but no exit record re-walks the row"
+        },
+        {
+          "row": 9,
+          "text": "Humans and machines are distinguished in the roster; agent-only guardrails and human/agent metrics read the distinction.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "10",
+          "evidence": "#100, #117, #119 (the distinction in the roster and its views)",
+          "note": "Phase 10 record: UNMET, the consumer half routed to Phase 12 item 4; #254 landed the agent claim ceiling and by_kind lane rates (TestAgentCeilingReadsTheRosterKind, internal/admit/policy_test.go), but the Phase 12 record walks it only as III.L row 1"
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "title": "Work contracts and lifecycle",
+      "rows": [
+        {
+          "row": 1,
+          "text": "A contract cannot leave draft without an acceptance spec; the spec's executable content passes a review gate before it can run anywhere; specs are protected artifacts.",
+          "posture": "any",
+          "status": "met",
+          "phase": "6",
+          "evidence": "#125 (the structured acceptance field, the universal gate rule bound to the ref's revision); #135 (gate-before-run at the verifier: exits 18 ungated, 19 spec_unrunnable)",
+          "note": "the Phase 5 record deferred gate-before-run to Phase 6, where 6.1 landed it"
+        },
+        {
+          "row": 2,
+          "text": "Text originating outside the trust boundary can propose but never directly become executable acceptance content; the gate between is structural and tested against a hostile corpus.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#125 (the propose-vs-arm proposal shape rule: outside text can propose but never directly become acceptance content)",
+          "note": "the hostile-corpus clause: the Phase 9 injection suite (#192) and the Phase 1 classification corpus (#80) sit on the release gate; no record ties them to this row by name"
+        },
+        {
+          "row": 3,
+          "text": "Above the trivial tier, contracts carry sealed checks: ledger commitment (salted hash) proving pre-existence; ciphertext encrypted to the current verifier keyring in the artifact store; keyring rotation re-encrypts without touching history; authoring grants disjoint from implementation grants; a capability audit proves no implementer path can decrypt.",
+          "posture": "any",
+          "status": "met",
+          "phase": "6",
+          "evidence": "#139 (check.sealed commitment in ready before any claim, the age-encrypted body, rotation re-encrypting without touching history, the sealer grant disjoint from claim and operator, the capability-audit decrypt drills)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Sealed-check documentation states their honest scope (defense-in-depth against specification gaming, not a structural solution) and names the load-bearing defenses beside them.",
+          "posture": "any",
+          "status": "met",
+          "phase": "6",
+          "evidence": "#139 (spec/sealed-checks.md, honest-scope documentation included per the Phase 6 record)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "The lifecycle vocabulary and transition rules are self-validating data enforced at admission; claim is a transition, not a state.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#122 (transitions.json self-validating, the lifecycle admission rule across rule set, hook and CLI; claim a transition), #129 (the seed/1 activation boundary)",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Claims are exclusive with fencing, granted only at admission (online); stale fences refuse with distinct codes; contention returns structured envelopes.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#123 (fences granted at admission, exit 6 fenced_out naming cited and active fence, the exit 2 contention envelope) TestClaimRaceStorm (internal/gitref); #128 (the claimless-citation fence fix)",
+          "note": ""
+        },
+        {
+          "row": 7,
+          "text": "Racing mode exists only as an explicit per-squad opt-in with its compute cost stated; offline \"claiming\" is impossible by construction.",
+          "posture": "any",
+          "status": "open",
+          "phase": "5",
+          "evidence": "",
+          "note": "Phase 13 item 1 (racing mode as the per-squad opt-in, os-56bee171, #269 merged, no Phase 13 exit record yet); the offline-claiming half met by #123 at Phase 5"
+        },
+        {
+          "row": 8,
+          "text": "Every exit from in_progress is deliberate; every involuntary exit leaves a packet; silent abandonment is impossible.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#122, #124 (the four deliberate exits, each carrying a packet), #127 (null parts refused)",
+          "note": ""
+        },
+        {
+          "row": 9,
+          "text": "Packets contain exactly four bounded parts — acceptance criteria; verified/asserted-marked settled decisions; commit-anchored artifact references (including the diff vs. merge-base or a range producing it); investigation findings — shape-linted and size-bounded.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#124 (internal/packet strict schema, the 3072 canonical bound, the mandatory base range), #127 (packet-shape hardening)",
+          "note": ""
+        },
+        {
+          "row": 10,
+          "text": "Packet sufficiency is drilled: a fresh executor completes a killed executor's contract from the packet alone, including not re-trying recorded dead ends (asserted by the drill).",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#124, #127 TestPacketResumeDrill (internal/packet/resume_test.go)",
+          "note": ""
+        },
+        {
+          "row": 11,
+          "text": "Plans are falsifiable: boundary set, retention set, validation commands for both, expected diff shape; missing retention fails lint; plan and implementation PRs are structurally disjoint.",
+          "posture": "any",
+          "status": "met",
+          "phase": "5",
+          "evidence": "#126 (internal/plan lint and classifier, exit 16 plan_required, plan and task PRs structurally disjoint), #130 (the engine pin for the receipt's plan-line commands)",
+          "note": ""
+        },
+        {
+          "row": 12,
+          "text": "Dependencies cascade, with advisory wakes where a channel exists (polling remains the correctness path, consistent with the wakeless run in H); holds cascade with suppression; initiative rollups render; goal ancestry warns.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "os-f0ae2cdf: TestDependencyCascadeWakesAndPolls (cmd/seed/topology_cli_test.go: a waiting dependent is absent from the queue, the poll and the claim boundary until every requirement is terminal, appears at that prefix, is woken once through a recording channel and claimed by polling alone), TestHoldCascadeSuppressesWakeUntilReleased (cmd/seed/topology_cli_test.go: a blocked root holds its descendants with held_by, a dependency closing under the hold wakes nobody, the unblock exposes each with one wake, base states unchanged), TestInitiativeRollupRendersDescendants (cmd/seed/topology_cli_test.go: exact transitive counts and the milestone sum in the contracts view, the report and the cache, byte-identical across rebuilds, the initiative excluded), TestGoalAncestryWarnsOnlyOpenUnanchoredWork (cmd/seed/topology_cli_test.go: inherited missions do not warn, open orphans and unaligned trees warn with their chains, terminal work does not, raw-pushed relations stay anomalous), TestTopologyRelationBoundary and TestTopologyIsAffordedWhereARelationIsLegal (internal/admit/topology_test.go), TestApplyHoldsTheGraphRule, TestDerivedReadsBothFolds and TestFoldTrustsOnlyWhatPassedTheBoundary (internal/topology), TestBridgeMatchesScopesAndWakesThroughChannels (internal/offers); the correctness path retained from #145: TestWakelessPollOnlyRun (cmd/seed/offer_cli_test.go)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "title": "Verdicts and evidence",
+      "rows": [
+        {
+          "row": 1,
+          "text": "\"Done\" is reachable only through the reconciliation chain `verdict.rendered(pass) → merge.requested → merge.observed → done`; each step is its own event; no code path collapses them.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#137 (merge.requested, merge.observed, done as separate events), #139, #141 (the override-backed path uncollapsed)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Verdict/merge divergence (verdict without merge, merge without verdict, target force-push) is a detected, surfaced, reconciled state — drilled by inducing each divergence in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#137 TestSubjectClassifiesInducedDivergences (internal/reconcile); #139 (unsealed, seal_unverified), #141 (overridden, override_unverified)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Verdicts are signed by verdict-granted keys provably disjoint from every implementing key on the contract; operator override is its own attributable verb, never a disguised verdict.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#135 (L1 independence, exit 17), #141 (merge.overridden as the operator-only attributable verb, never a verdict)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "The verifier executes in clean per-run isolation; parallel verdicts never collide; cleanup fires pass or fail; the verifier's verdict inputs are enumerable and exclusively self-executed or self-read (no implementer-claims channel).",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#135 (origin-stripped clone workspaces, the exec runner profile named in every receipt, cleanup pass or fail)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Receipts bind contract id, plan hash at merge-base, diff hash, changed-file inventory, visible and sealed check transcripts, and environment fingerprint; verification recomputes everything from the submission head and fails on mismatch.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#135 (JCS receipts binding contract, plan at merge-base, diff, inventory, transcripts, environment; recompute-and-mismatch exit 21), #139 (sealed transcripts inside the recompute boundary); os-7fc2ca38 TestReceiptBindsTraceShape (internal/verdict), TestTraceShapeNormalizes (internal/traceshape), TestTraceArtifactsStoredAndChecked (cmd/seed): trace-shaped entries bind what a harness's export reproduces, and check verifies the shapes",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Independence levels L1–L3 are defined, declared per tier, enforced at verdict time, and recorded in the verdict; high-consequence tiers require runtime-tuple separation (L2) or deterministic-first verification (L3).",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#233 TestLevelsAreOrderedAndTiered (internal/transition), TestLevelClaimedMustEqualTheLevelSupported, TestLevelShortOfTheTierRefuses, TestLevelsAreReappliedAlongTheMergeChain (internal/admit), TestSmallTeamCriticalContractReachesDoneAtL2, TestFleetExecutableCriticalContractReachesDoneAtL3 (cmd/seed); #222 TestTierTableMirrorsSpec",
+          "note": ""
+        },
+        {
+          "row": 7,
+          "text": "A red verdict is unmergeable and locks the implementer out of self-approval until a new submission.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#141 (exit 25 red_locked until a new submission, contract.returned as the return path)",
+          "note": ""
+        },
+        {
+          "row": 8,
+          "text": "Rubric verdicts score per-item with cited evidence and explicit uncertainty; low-confidence items route to human verdict; calibration runs against a human gold set with automatic authority suspension on drift.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#238 TestRubricVerdictsAtTheTerminal (cmd/seed), TestHumanVerdictAndTheDeferral, TestScorecardDerivationAtAdmission, TestCalibrationQualifiesTheVerifierAndBindsItsRenders (internal/admit), TestCalibrationOwesMintsDriftAndTheDefect (internal/eval), TestSmallTeamRubricContractsReachDone (cmd/seed); os-7fc2ca38 TestScorecardCitesTraceSpansInPackage (internal/verdict), TestTraceArtifactsStoredAndChecked (cmd/seed): a span is cited by its path in the shape",
+          "note": "residual stated by the Phase 10 record: no calibration definition ships; the gold set is held outside the tree and committed to by digest"
+        },
+        {
+          "row": 9,
+          "text": "Verifier code, rubrics, thresholds, sealed keyring, and admission rules are on the protected surface; the governance root and its change process are named in config; the capability audit proves agent-key disjointness in CI.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "10",
+          "evidence": "#139, #102, #234 (the capability-audit half)",
+          "note": "Phase 10 record: UNMET, the config half routed to Phase 12 item 4 beside III.L row 2; #254 landed the governance block and the Phase 12 record walks III.L row 2 met (TestCodeRefProtectedSurfaceIsRootOnly, TestCapabilityAuditOfTheShippedManifests) without naming this row"
+        },
+        {
+          "row": 10,
+          "text": "Evidence, receipts, and verdicts are queryable by contract, actor, time, and outcome.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "10",
+          "evidence": "#119 (contract, actor and outcome via the cache and the artifact store)",
+          "note": "Phase 10 record: UNMET, the time arm carded as os-74ce2261; #266 merged it (ts and ts_unix on every per-event table, per the Phase 12 record), no exit record re-walks the row"
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "title": "Supervisor and execution",
+      "rows": [
+        {
+          "row": 1,
+          "text": "The scheduling model is offers-and-claims: eligibility-scoped offers; workers pull and claim; claims settle at admission; wake is advisory transport whose total failure costs only latency — proven by a wakeless (poll-only) CI run.",
+          "posture": "any",
+          "status": "met",
+          "phase": "7",
+          "evidence": "#145 (offer.published eligibility-scoped and expiring, workers pull and claim, exclusivity settling at admission, the wakeless poll-only drill)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Offers expire; there are no assignments to orphan; duplicate scheduling is impossible because exclusivity settles at admission.",
+          "posture": "any",
+          "status": "met",
+          "phase": "7",
+          "evidence": "#145 (claimed-or-expire liveness with the claim as the consumption boundary)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Spending verbs require an admitted `budget.reserve`; execution is fenced to the reservation; `budget.settle`/release records actuals; concurrent over-spend against one budget is structurally impossible for reservable resources — drilled.",
+          "posture": "any",
+          "status": "met",
+          "phase": "7",
+          "evidence": "#149 (budget.reserve/settle/release, holder-only reserves, the two-drafts-one-view race drill) TestReservationRaceAndStatus (cmd/seed/budget_cli_test.go); #151, #152 (run.started fills the spending table, Provision refuses outside the gate)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Where a substrate cannot stop spend synchronously, the budget is documented and surfaced as a risk limit, not a guarantee, per adapter.",
+          "posture": "any",
+          "status": "open",
+          "phase": "7",
+          "evidence": "",
+          "note": "Phase 13 item 2 (container, cloud-session and enrolled-remote adapters with their per-adapter risk-limit declarations, os-083112ac, plan #274, draft #282); the local worktree adapter stops synchronously, so spec/budgets.md has no declaration to make yet (Phase 7 record)"
+        },
+        {
+          "row": 5,
+          "text": "Remaining reservation is visible in the worker's envelope; exhaustion produces a deliberate park with packet, never a vanished worker.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "7",
+          "evidence": "#160 (the budget block in the envelope from BudgetViewAt, Phase 8); #191 (the worker loop's exhaustion park with packet, Phase 9)",
+          "note": "Phase 7 record routed the envelope block to Phase 8 item 1 and exhaustion parking to Phase 9 item 1; both merged, no exit record re-walks the row"
+        },
+        {
+          "row": 6,
+          "text": "Executor adapters implement provision/wake/meter, report the provisioned runtime tuple, and exist for at least: local worktree, container, cloud session, enrolled remote worker; the adapter interface is public.",
+          "posture": "any",
+          "status": "open",
+          "phase": "7",
+          "evidence": "",
+          "note": "Phase 13 item 2 (remaining executor adapters, os-083112ac, plan #274, draft #282); the public interface and the local worktree adapter landed in #151, #152"
+        },
+        {
+          "row": 7,
+          "text": "Metering flows on observation channels and settles to the ledger at run end; no execution path is unmetered.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "7",
+          "evidence": "#151, #152 (metering on the observation channel settling via run.settled, drilled through the full bracket); #205 (the unsettled-run maintenance lint)",
+          "note": "the universal half (no execution path is unmetered) recorded unmet at Phase 7: Meter is caller-optional; detection routed to Phase 9 item 3 (#205), the claim to Phase 13's exit line"
+        },
+        {
+          "row": 8,
+          "text": "Disposability after last admitted synchronization is drilled with randomized kills; the loss window is bounded by declared sync policy and stated honestly.",
+          "posture": "any",
+          "status": "met",
+          "phase": "7",
+          "evidence": "#151 (SIGKILL at a seeded randomized site after an admitted synchronization, the contract completing elsewhere, the loss window stated as the post-sync observation lines)",
+          "note": ""
+        },
+        {
+          "row": 9,
+          "text": "Preemption is graceful-first with specified safe-point semantics in the worker contract; force-kill still yields a reap packet.",
+          "posture": "any",
+          "status": "met",
+          "phase": "7",
+          "evidence": "#154 (run.interrupted once per fence, safe-point semantics as the worker contract, the graceful park and force reap drills) TestGracefulPreemptionDrill (cmd/seed)",
+          "note": ""
+        },
+        {
+          "row": 10,
+          "text": "Scheduling inputs include cost class and qualification tuples; routing is data.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "7",
+          "evidence": "#149 (the cost class in the filed budget class); #216 (offer.published scoping by tuples, Phase 10)",
+          "note": "Phase 7 record routed routing-as-data to the Phase 9 dispatcher and tuples to Phase 10 item 1; the tuple scope landed and #254 made routing a declared squad rule, but no exit record re-walks the row"
+        }
+      ]
+    },
+    {
+      "id": "I",
+      "title": "Affordances and the actor interface",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Every verb response is a versioned, schema-stable envelope with structured errors and meaningful exit codes, includes the verbs currently legal for this actor on this subject, and carries the ledger position it was computed at.",
+          "posture": "any",
+          "status": "met",
+          "phase": "8",
+          "evidence": "#160 (seed-envelope/0, admit.Affordances over the enforcing Check, structured errors, exit codes allocated in the spec table, position stamps on every append path)",
+          "note": "three bounded carve-outs named by the Phase 8 record: keyless reads list the empty set, actor.enrolled only where the key is known, a null position where no ledger was opened"
+        },
+        {
+          "row": 2,
+          "text": "The affordance computation and admission enforcement consume the same rule set; an affordance-listed verb refused at admission for legality (absent a concurrent event, detectable via the position stamp) is a bug class with a regression test.",
+          "posture": "any",
+          "status": "met",
+          "phase": "8",
+          "evidence": "#160 (one rule set for computation and enforcement); #163 TestAffordanceRegressionClass (internal/admit)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "The CLI is the complete interface; the machine-protocol surface exposes identical semantics; platform parity (including Windows) is documented and tested.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "12",
+          "evidence": "#272 TestGeneratedDocsAreCommitted, TestCheckCatchesHandEdit (internal/docs); TestDocsCheckCleanOnCommitted, TestDocsGenerateThenCheck (cmd/seed)",
+          "note": "Phase 13 item 6, #273"
+        },
+        {
+          "row": 4,
+          "text": "Refusal rates are tracked as an affordance-gap metric.",
+          "posture": "any",
+          "status": "met",
+          "phase": "8",
+          "evidence": "#165 (the attempts journal at every stamped admission-boundary seam, report v10's refusals section, spec/refusals.md)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Matching promoted lessons surface in packets and envelopes at claim time.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#235 TestSmallTeamPromotionDeliversLessonsAtClaimTime (cmd/seed/lessons_e2e_test.go)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "J",
+      "title": "Lanes",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Role definitions exist for all six lanes as grants + conventions, composable from ordered fragments, resolved and checked by validation.",
+          "posture": "any",
+          "status": "met",
+          "phase": "9",
+          "evidence": "#188 (lanes manifests and ordered fragments, seed lane validate, exit 26 lane_invalid); #212 (six enforced by name)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "The dispatcher runs with least standing capability and passes the injection conformance suite (hostile corpus: embedded instructions in intents, mirrors, and tool output are quoted as data, never obeyed).",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#188, #192 TestNoHostileTextWidensTheDispatcherSet, TestDispatcherReachableSetIsNamed (internal/admit/injection_test.go); TestHostileCorpusRefuses (internal/classify); TestProjectionsCarryPayloadsVerbatimIncludingHostileText (cmd/seed/injection_cli_test.go); #270 TestNoHostileRequestWidensTheDispatcherSet (internal/admit/injection_request_test.go)",
+          "note": "the mirror arm was routed to Phase 13 item 4 by the Phase 9 record; the Phase 12 record closes it with #270"
+        },
+        {
+          "row": 3,
+          "text": "Dispatcher re-triage rate and planner unedited-approval rate are tracked; the planner lane receives the strongest tuples by policy.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "10",
+          "evidence": "#239 TestReportLanesSection, TestReportLanesRatesAreNullOverNothing (internal/project), TestRespecificationActivatesAtSeed4, TestPlanDigestsThroughTheBoundary (internal/admit)",
+          "note": "Phase 13 item 7, #286"
+        },
+        {
+          "row": 4,
+          "text": "Maintenance runs green unattended — reaps, divergence reconciliation, projection rebuilds, lints, checkpoints — and is audited as an ordinary actor.",
+          "posture": "any",
+          "status": "met",
+          "phase": "9",
+          "evidence": "#205 TestMaintainHoldsNoPrivatePowers, TestMaintainFilesDefectsAndRaisesNoEscalation, TestMaintainCheckpointIsStartableByAFreshReader (cmd/seed/maintain_cli_test.go)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Escalations carry packet + question + minimal decision; waiting escalations surface with age; resolution latency is tracked.",
+          "posture": "any",
+          "status": "met",
+          "phase": "9",
+          "evidence": "#200 (escalation.raised and decision.recorded, escalation.pending with the raising ts, resolved_after_seconds derived from the chain)",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Small-team mode (one *principal* operating a minimal set of actor identities — at least an implementing actor and a distinct verifying actor, so verdict key disjointness holds even when one person runs everything) and fleet mode (disjoint actors per lane) both run the full loop in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "9",
+          "evidence": "#207 TestSmallTeamModeReachesDone, TestFleetModeConvergesAndReachesDone, TestBlindRetryDetector (cmd/seed/modes_e2e_test.go); #212 (both modes provisioned from the shipped role set)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "K",
+      "title": "Curation, memory, and the flywheel",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Online lanes append evidence only; conclusion-writing is grant-gated to the curator's proposal path; workers append candidate observations, never promoted lessons.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#234 TestCuratorReadsAndCannotWrite (cmd/seed/modes_e2e_test.go)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "The pipeline is staged with distinct storage and gates: observations → hypotheses → validated lessons → policy; no stage skips.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#234, #235 TestFoldRendersStagesAndCountsAnomalies (internal/curation), TestKnowledgeVerbsDriveTheStages (cmd/seed)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Promotion requires applies-when conditions; support from >1 non-failed trajectory (and >1 actor where the family allows); provenance links; last-validated stamp; and — for behavior-changing lessons — survival of an adversarial evaluation against constructed counter-trajectories.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#235 TestAppliesWhenIsAPredicateOverRecordFields, TestShapesRefuseAtRegisteredGates (internal/curation)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Trajectories are treated as untrusted inputs; the poisoning drill fails to achieve promotion in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#236 TestPoisonCorpusCoversEveryRegisteredGate, TestEveryPoisonFailsAtBothEnds, TestPoisonResidualsArePinned (internal/admit/poisoning_test.go), TestPoisonsRefuseAtTheTerminal (cmd/seed/modes_e2e_test.go); #237 (a poison per new gate)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Conflicting evidence is a first-class contested state, never silently averaged; contested lessons do not surface in envelopes.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#235 TestSmallTeamPromotionDeliversLessonsAtClaimTime (cmd/seed/lessons_e2e_test.go)",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Lessons expire for revalidation; retirement revokes conclusions and keeps evidence; a lesson implicated in a regression rolls back by reverting its PR.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#237 TestExpiryIsDerivedAtAnInstant, TestRetirementShapesRefuseAtTheirGates (internal/curation)",
+          "note": ""
+        },
+        {
+          "row": 7,
+          "text": "Dead ends carry failure condition and environment and can be un-retired on environment change.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#234 (the dead-end shape: failure condition and environment); #237 (curation.deadend.retired and unretired on a changed environment)",
+          "note": ""
+        },
+        {
+          "row": 8,
+          "text": "The flywheel closes through gates: recurring shapes → drafted workflows → mock validation → PR; repair roles propose patches as PRs; conversion rate is tracked.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#240 TestSmallTeamChoreWorkedThreeTimesConverts (cmd/seed/flywheel_e2e_test.go), TestRawChainsManufactureNoChore, TestRawRepairVerdictLeavesTheRepairOpen (internal/flywheel/flywheel_test.go)",
+          "note": ""
+        },
+        {
+          "row": 9,
+          "text": "Knowledge bloat is managed: dedup with provenance, staleness flags, structure lint.",
+          "posture": "any",
+          "status": "met",
+          "phase": "11",
+          "evidence": "#237 TestStructureAndDedupLints (internal/curation); lint.duplicate and lint.structure under make check, the lesson_stale maintenance finding",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "L",
+      "title": "Guardrails and governance",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Tiers gate un-planned/un-operator'd action per-squad and per-path.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#254 TestAgentCeilingReadsTheRosterKind, TestRoutingIsHeldToTheDeclaredSquads, TestUnknownCeilingFailsClosed (internal/admit/policy_test.go), TestPlanLintHoldsTheScopeToThePathFloors, TestVerdictRenderHoldsTheReceiptToThePathFloors (cmd/seed)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "The protected surface is enumerated in config, includes the admission rules and the check pipeline's own definitions, is changed only by the named governance root via PR + owner review, and is write-denied to every agent key it gates — capability audit in CI; the test-content residual is documented with its mitigations.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#250 TestCodeRefProtectedSurfaceIsRootOnly (cmd/seed-admit/coderef_test.go); #254 (the governance block) TestCapabilityAuditOfTheShippedManifests (cmd/seed/audit_test.go)",
+          "note": "the test-content residual is named in spec/postures.md"
+        },
+        {
+          "row": 3,
+          "text": "Data/instruction defense is layered and documented with its limits: least capability for untrusted-content readers (primary), provenance-typed prompt channels, unforgeable delimiters, strict-shape command interpolation, sandboxing, network policy, secret isolation; the hostile corpus passes on every release.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#192 (the Phase 9 injection suite), #80 (the classification corpus), both under the release gate (#250)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Per-verb policy governs the machine-protocol surface with attributable approvals.",
+          "posture": "any",
+          "status": "met",
+          "phase": "13",
+          "evidence": "#330/os-5781a026 TestServeGovernsAnActByApproval, TestServeApprovalsAreAttributableAndAnsweredOnce, TestPreseedCheckLintsTheApprovalsBlock (cmd/seed/approval_cli_test.go); TestGovernedActNeedsAnOpenGrantAndSpendsIt, TestApprovalShapesAndCitationsHoldRegardlessOfDeclaration, TestAffordancesListAGovernedActExactlyUnderAnOpenGrant (internal/admit/approval_test.go); TestApprovalGrantsAreSpentOnce (internal/transition/approval_fold_test.go); TestApprovalPendingIsOwedByTheOperatorUntilAnswered (internal/obligation/approval_test.go); the allow and deny modes: TestServeRefusesByTheSamePolicyAsTheCLI, TestServeApprovalsAreAttributableToTheirSigner (cmd/seed/serve_policy_test.go, os-8ecef90f), TestAgentCeilingReadsTheRosterKind, TestRoutingIsHeldToTheDeclaredSquads (internal/admit/policy_test.go), the grant drills (internal/admit/grant_test.go)",
+          "note": "charter II.14 names three modes: allow and deny (the grant table; the declaration's ceiling and routing rules) and require-approval (guardrails.approvals, the approval.* verbs, the approval.pending inbox row, os-5781a026); the surface authenticates nobody and consults the boundary, so the policy is admission's and the attribution the chain's signature; routed by Phase 13 item 6 (#273), partial at os-8ecef90f, met here"
+        },
+        {
+          "row": 5,
+          "text": "Forge protections are declared desired-state and reconciled: required checks, admission-only ledger writes (*enforced-only*), immutable tags; scheduled/CI identities are least-privilege.",
+          "posture": "mixed",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#252 TestPlanAndApplyThroughTheSnapshot, TestLintWorkflowsFindsScheduledWriters (internal/protections/protections_test.go), TestGitHubAdapterReconciles (internal/protections/github_test.go); TestCodeRefTagsAreImmutable (cmd/seed-admit/coderef_test.go)",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Process changes pass boundary + retention, lint-checked for declared sets.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#126 TestPlanGateAboveTrivialTier (internal/admit/plan_test.go); #254 TestPlanLintTierAndScopeAreHeldToTheFloors (cmd/seed)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "M",
+      "title": "Workflows",
+      "rows": [
+        {
+          "row": 1,
+          "text": "DAG engine with typed inputs, schema-enforced outputs, waves, triggers, retries, failure policy, budgets, and safe resume; approval/review/check gates; total mock mode; exhaustive validation; vault-indirect secrets; PR-only definition changes on a protected registry.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#240 (the v1 engine Seed's flywheel drafts into: scripts/seed workflow validate and run, typed edges, gates, waves, budgets, the mock run; drafted definitions landing as PRs against a protected registry)",
+          "note": "two residuals named by the Phase 12 record: vault-indirect secrets are not implemented; which engine new users clone is section 5 step 2's decision"
+        }
+      ]
+    },
+    {
+      "id": "N",
+      "title": "Interoperability and federation",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Harness fan-outs from single sources with drift-failing CI; lifecycle docs generated from the transition spec; `last-verified` stamps with staleness lint.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#272 TestGeneratedContentIsFromTheTables, TestCheckCatchesHandEdit, TestGeneratedDocsAreCommitted (internal/docs/docs_test.go); seed docs check failing docs_drift under make check-next",
+          "note": "walked by the Phase 12 record as III.Q row 3 (docs governed) and under III.I row 3, not by this row's number"
+        },
+        {
+          "row": 2,
+          "text": "The core loop runs on any git remote supporting the declared admission posture; at least one non-primary forge is supported by adapters.",
+          "posture": "any",
+          "status": "open",
+          "phase": "",
+          "evidence": "",
+          "note": "Phase 13 item 3 (non-primary forge adapter, os-ad610334, plan #275, draft #281)"
+        },
+        {
+          "row": 3,
+          "text": "Cross-org collaboration is opaque (capability cards, task lifecycle, artifacts-only).",
+          "posture": "any",
+          "status": "open",
+          "phase": "",
+          "evidence": "",
+          "note": "Phase 13 item 5 (the A2A-shaped cross-organization boundary, os-40ed0ca0, #279 merged; no Phase 13 exit record yet)"
+        },
+        {
+          "row": 4,
+          "text": "Federation is projection-only: uniform read remotes, request-event ingress, no cross-ledger write path — proven by its absence.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#270 TestNoHostileRequestWidensTheDispatcherSet (internal/admit/injection_request_test.go); the federation report drill",
+          "note": "met by the Phase 12 record's own words: #270 meets III.N row 4 (projection-only reads, request-event ingress, no cross-ledger write path); Phase 13's record walks the pillar in full"
+        },
+        {
+          "row": 5,
+          "text": "No worker-contract dependency on any model vendor.",
+          "posture": "any",
+          "status": "open",
+          "phase": "",
+          "evidence": "",
+          "note": "Phase 13's exit line (the named III.N criteria); no Phase 13 item names it and no exit record walks it"
+        }
+      ]
+    },
+    {
+      "id": "O",
+      "title": "Evaluation infrastructure",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Eval contracts run through production machinery against fixture repos and gate tuple qualification; spot-checks run scheduled.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#221 TestEvalCheckProvesTheKnownVerdict (cmd/seed), TestCheckProvesTheKnownVerdict (internal/eval)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Verifier calibration runs scheduled with automatic authority suspension.",
+          "posture": "any",
+          "status": "met",
+          "phase": "10",
+          "evidence": "#238 TestCalibrationQualifiesTheVerifierAndBindsItsRenders (internal/admit), TestCalibrationOwesMintsDriftAndTheDefect (internal/eval)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "(*enforced-only*) The compromised-actor drill passes in CI on every release — the architecture's own definition of done.",
+          "posture": "enforced-only",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#250 TestCeilingHoldsAtThePush, TestCoverageBothWays (internal/redteam); make check as the release gate on every push to main, pull request and merge group (spec/redteam.md)",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Standing drills run in CI: projection rebuild, checkpoint verification, packet-resume with dead-end assertions, claim race storms, halt (including raw-git bypass where enforced), key revocation with keyring rotation, verdict/merge divergence, data-classification hostile corpus, budget reservation races, curator poisoning.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "TestRebuildByteIdenticalAndStamped (internal/project); TestMaintainCheckpointIsStartableByAFreshReader (cmd/seed); TestPacketResumeDrill (internal/packet); TestClaimRaceStorm (internal/gitref); TestHaltRefusesEverythingButLift (internal/halt), TestDrillRawAdversaryPerPosture (cmd/seed-admit); TestDrillKeyRotation, TestDrillCompromisedKeyCutPerPosture (cmd/seed-admit); TestSubjectClassifiesInducedDivergences (internal/reconcile); TestHostileCorpusRefuses (internal/classify), TestNoHostileTextWidensTheDispatcherSet (internal/admit); TestReservationRaceAndStatus (cmd/seed); TestEveryPoisonFailsAtBothEnds (internal/admit); all under make check",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Trajectory-prefix regression covers lane decision points; simulation mode runs the whole system credential-free end-to-end.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#239 TestTrajectoryCorpusIsTheRecorderScenario, TestTrajectoryCorpusReplaysGreenAndPlantedRowsDiverge (cmd/seed), TestReplayClassifiesEveryDivergence (internal/trajectory); #272 TestSimulateReachesDoneCooperative, TestSimulateReachesDoneEnforced, TestSimulateAcceleratedBacklog (cmd/seed/simulate_cli_test.go), TestAuditCatchesSilentAbandonment, TestAuditCatchesUnofferedClaim (internal/simulate/audit_test.go)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "P",
+      "title": "Distribution, supply chain, adoption",
+      "rows": [
+        {
+          "row": 1,
+          "text": "Clone-and-init adoption from tagged releases; three-way template upgrades with rollback; pinned checksum-verified engine, never committed, air-gap paths; checksum/protocol/downgrade-safe engine upgrades; everything executable hash-pinned.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "12",
+          "evidence": "scripts/seed fetching the engine pinned in .seed/engine.lock with checksum verification; seed engine upgrade with rollback and the protocol preflight; seed template upgrade's three-way merge from recorded provenance; the vendored engine for air-gapped machines; checksums.txt with provenance on every release",
+          "note": "unmet residual owned by promotion section 5 step 2: Seed's own binary is built from source and no seed/v* release has been cut"
+        },
+        {
+          "row": 2,
+          "text": "The admission validator ships in hook and service form, both stateless, both rebuildable from a clone.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#99 TestDrillKillAndReplace (cmd/seed-admit/drill_test.go); #252 TestServiceKillAndReplace (cmd/seed-admit/serve_test.go)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Preseed bootstraps config, guardrails, teams, protections, and the declared admission posture in one idempotent, CI-verified file.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#254 TestInitPreseedIsIdempotentAndDriftRefuses (cmd/seed/preseed_cli_test.go); seed preseed check on the fixture deployment under make check-next",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Predecessor import is a drilled two-command path: lossless export → genesis import (refusing non-empty ledgers), source tamper-evidence verified before conversion, against a real predecessor fixture in CI.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#255 TestRealFixtureImports (internal/importer/fixture_test.go), TestAnchorRefusalsPrecedeEveryWrite, TestNonEmptyLedgerRefuses, TestUnmappedVerbRefuses (internal/importer/drills_test.go), TestImportCommandEnvelopes (cmd/seed/import_cli_test.go)",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Install is boring: one command, no telemetry, no account.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "scripts/seed bootstraps and seed init --preseed (#254) seeds a deployment from one file; exactly three non-test files under next/ import net/http (the admission service, the proposal client, the GitHub protections adapter)",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "Q",
+      "title": "Quality, docs, community",
+      "rows": [
+        {
+          "row": 1,
+          "text": "One fast backpressure command stays green on the default branch.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "make check green on main at every merge (#72 wired make check-next; #250 made it the release gate)",
+          "note": ""
+        },
+        {
+          "row": 2,
+          "text": "Reference-implementation coverage is measured with a stated floor; scripts and hooks carry smoke tests; conformance suites run per exporter/adapter.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "covergate at a stated 90% floor over every package; the v1 smoke targets under the same command; the backend conformance suites; #252 TestGitHubAdapterReconciles (internal/protections/github_test.go)",
+          "note": ""
+        },
+        {
+          "row": 3,
+          "text": "Docs are governed: operator handbook, generated worker docs, stamped design docs.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "#272 TestGeneratedContentIsFromTheTables, TestCheckCatchesHandEdit, TestGeneratedDocsAreCommitted (internal/docs/docs_test.go); the operator handbook",
+          "note": ""
+        },
+        {
+          "row": 4,
+          "text": "Adopted ideas are traced to sources and rejections recorded with reasons; §II.18's absences are standing rejections proposals must argue against.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "SEED-NEXT.md Appendix C, docs/decisions.md, docs/design-options.md",
+          "note": ""
+        },
+        {
+          "row": 5,
+          "text": "Decisions are recorded and binding; the authority order is stated.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "the authority order in docs/CONTRIBUTING-AGENTS.md, the decisions under decisions/, the build plan's decision rubric",
+          "note": ""
+        },
+        {
+          "row": 6,
+          "text": "Governance is fork-friendly: permissive license, no CLA, no open-core split, stated explicitly.",
+          "posture": "any",
+          "status": "met",
+          "phase": "12",
+          "evidence": "the MIT license, no contributor license agreement, no open-core split, stated as the repository's standing in the Phase 12 record",
+          "note": ""
+        },
+        {
+          "row": 7,
+          "text": "Self-hosting is total once bootstrapped: the system coordinates its own development, and every feature ships only after coordinating its own delivery.",
+          "posture": "any",
+          "status": "partial",
+          "phase": "12",
+          "evidence": "Seed coordinates this repository's next: cards through v1's queue today",
+          "note": "promotion, build plan section 5"
+        }
+      ]
+    },
+    {
+      "id": "R",
+      "title": "The autonomy end-state",
+      "rows": [
+        {
+          "row": 1,
+          "text": "One-sentence intents become routed contracts whose draft acceptance specs survive human review unedited in the majority of cases.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion (build plan section 5): measured at the shadow run by the dispatcher's re-triage rate in the report's lanes section and a human-review sample of draft acceptance specs; met when the shadow run's evidence card records the majority unedited"
+        },
+        {
+          "row": 2,
+          "text": "Planner plan-PRs pass human review >80% unedited; implementers reach verdict-passed submissions unassisted on the happy path.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion: measured at the shadow run by lanes.planner.unedited_rate above 0.800 and the receipts' independence on happy-path submissions; met when the shadow run's evidence card records it"
+        },
+        {
+          "row": 3,
+          "text": "The verifier lane holds quality alone on low tiers; humans review only high-tier plans, the protected surface, and escalations.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion: measured at the shadow run by the tiers' independence levels (tiers.md) and the verifiers' calibration agreement, humans reviewing only high-tier plans, the protected surface and escalations; met when the evidence card records it"
+        },
+        {
+          "row": 4,
+          "text": "Every escalation is one packet + one question + one decision; transcript-dumping is a defect.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion: measured at the shadow run by every escalation.raised carrying one packet, one question and one decision, a transcript dump filed as a defect; met when the evidence card records it"
+        },
+        {
+          "row": 5,
+          "text": "The system runs unattended for a week on a real backlog with zero chain violations, zero lost updates, zero silent abandonments, zero guardrail breaches, zero unreserved spend — and the ledger alone reconstructs and justifies everything.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion: the shadow run itself, one week unattended on a real backlog with the five-bar ledger audit (simulation.md) applied to the real chain; met when the evidence card records zero chain violations, lost updates, silent abandonments, guardrail breaches and unreserved spend"
+        },
+        {
+          "row": 6,
+          "text": "The flywheel demonstrably compounds over a quarter (chore→workflow conversion, packet-resume success, cost per contract), from ledger metrics alone.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion: measured over the quarter after the self-hosting cutover by the report's flywheel and knowledge sections and the cost per contract from budgets; met when the evidence card records the compounding"
+        },
+        {
+          "row": 7,
+          "text": "A team that has never spoken to the authors adopts from the README in under an hour, on their forge, with their declared admission posture, and reaches their first agent-shipped, verifier-passed, human-reviewed PR the same day.",
+          "posture": "any",
+          "status": "routed",
+          "phase": "",
+          "evidence": "",
+          "note": "routed to promotion's distribution step: the first team that adopts from the README on its own forge and reaches a verifier-passed, human-reviewed PR the same day; met when that team's outcome is recorded"
+        }
+      ]
+    }
+  ]
+}

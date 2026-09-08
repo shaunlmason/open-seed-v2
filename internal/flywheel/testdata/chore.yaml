@@ -1,0 +1,29 @@
+# Drafted by seed flywheel from shape s-7d016a5b521d: 2 done contract(s) routed core, accepted by accept.md.
+# The run steps are the acceptance spec's own validation commands, verbatim and in order; nothing here was invented.
+schema_version: "1"
+name: chore-7d016a5b
+description: |
+  Use when: a contract routed core at tier trivial is accepted by accept.md and has recurred.
+  NOT for: work whose acceptance is another spec, or a first occurrence.
+defaults: {harness: claude, model: sonnet}
+budgets: {max_wall_clock_minutes: 60, max_step_retries: 1}
+steps:
+  - id: implement
+    role: implementer
+    tools: coding
+    prompt: "Implement the recurring chore so that the acceptance spec at its recorded anchor passes; summarize the change."
+    produces: [{name: change, file: artifacts/change.md}]
+  - id: check-1
+    run: 'printf ok'
+    depends_on: [implement]
+  - id: check-2
+    run: 'test -f hello.txt'
+    depends_on: [check-1]
+  - id: verdict
+    role: reviewer
+    tools: readonly
+    depends_on: [check-2]
+    consumes: [change]
+    prompt: "Review {{output.change.path}} against the acceptance spec at its recorded anchor and emit a JSON verdict."
+    output_format: {type: object, required: [verdict], properties: {verdict: {type: string}}}
+    produces: [{name: verdict, file: artifacts/verdict.json}]
